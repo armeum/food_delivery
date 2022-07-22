@@ -1,37 +1,23 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
-	"food_delivery/routes"
-	"log"
+	"headfirstgo/food_delivery/models"
+	"headfirstgo/food_delivery/routes"
+	"headfirstgo/food_delivery/database"
 
-	"github.com/gin-gonic/gin"
+	"log"
+	"net/http"
+
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-const (
-	host = "localhost"
-	port = 5432
-	user = "postgress"
-	password = "0990"
-	dbname = "database"
-) 
-
 func main() {
+	//close databse when the main func is finishes
+	db := database.SetupPostgres()
+	db.AutoMigrate(&models.User{})
 
-	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s", host, port, user, password, dbname)
+	r := routes.SetupRoutes(db)
+	r.Run()
 
-	db, err := sql.Open("postgress", psqlconn)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer db.Close()
-
-	insert := 
-
-	router := gin.New()
-	routes.UserRoute(router)
-	router.Run(":8080")
-
+	log.Fatal(http.ListenAndServe(":8080", r))
 }

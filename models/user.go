@@ -1,13 +1,17 @@
 package models
 
-import "time"
+import (
+	"github.com/jinzhu/gorm"
+)
 
 type User struct {
-	Id          uint      `json:"id"`
-	FirstName   string    `json:"name"`
-	LastName    string    `json:"last_name"`
-	PhoneNumber string    `json:"phone_number"`
-	DateOfBirth string    `json:"date_of_birth"`
-	CreatedAt   time.Time `json:"created_at"`
+	gorm.Model
+	// Id          uint      `json:"id"`
+	FirstName   string `json:"first_name"`
+	LastName    string `json:"last_name"`
+	PhoneNumber string `gorm:"typevarchar(50);unique_index" json:"phone_number"`
+	Email       string `gorm:"typevarchar(100);unique_index" json:"email"`
+	DateOfBirth string `json:"date_of_birth"`
+	Password    string `json:"password"`
+	// CreatedAt   time.Time `json:"created_at"`
 }
-
