@@ -14,9 +14,9 @@ func SetupRoutes(db *gorm.DB) *gin.Engine {
 	})
 	r.POST("/auth/:login/:phone_number", controllers.Login)
 	r.GET("/users", controllers.FindUsers)
-	r.GET("/users/:phone_number", controllers.FindUser)
+	r.GET("/users/:id", controllers.FindUser)
 	r.POST("/user", controllers.CreateUser)
-	r.PATCH("/:users/:phone_number", controllers.UpdateUser)
-	r.DELETE("/:users/:phone_number", controllers.DeleteUser)
+	r.PATCH("/:users/:id", controllers.UpdateUser)
+	r.DELETE("/:users/:id", controllers.DeleteUser)
 	return r
 }

@@ -40,7 +40,7 @@ func FindUser(c *gin.Context) {
 	//get model if exists
 	var user models.User
 	db := c.MustGet("db").(*gorm.DB)
-	if err := db.Where("phone_number = ?", c.Param("phone_number")).Find(&user).Error; err != nil {
+	if err := db.Where("id = ?", c.Param("id")).Find(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!!"})
 		return
 	}
@@ -82,7 +82,7 @@ func UpdateUser(c *gin.Context) {
 	//Get model if exists
 	var user models.User
 
-	if err := db.Where("phone_number = ?", c.Param("phone_number")).First(&user).Error; err != nil {
+	if err := db.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 		return
 	}
@@ -106,7 +106,7 @@ func DeleteUser(c *gin.Context) {
 
 	///get model if exists
 	var user models.User
-	if err := db.Where("phone_number = ?", c.Param("phone_number")).Find(&user).Error; err != nil {
+	if err := db.Where("id = ?", c.Param("id")).Find(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 		return
 	}
