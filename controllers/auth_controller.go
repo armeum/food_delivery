@@ -18,29 +18,29 @@ type LoginBody struct {
 	PhoneNumber string `json:"phone_number"`
 }
 
-func Login(c *gin.Context) {
+func Login(c *gin.Context) { 
 
 	//validate input
-	var input LoginBody
+	var input LoginBody 
 
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := c.ShouldBindJSON(&input); err != nil { 
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()}) 
 		return
 	}
 
 	//get model if exists
-	var user models.User
-	db := c.MustGet("db").(*gorm.DB)
-	if err := db.Where("phone_number = ?", c.Param("phone_number")).Find(&user).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!!"})
-		return
-	}
-	user.Password = RandomPassword()
+	var user models.User 
+	db := c.MustGet("db").(*gorm.DB) 
+	if err := db.Where("phone_number = ?", c.Param("phone_number")).First(&user).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!!"}) 
+		return 
+	} 
+	user.Password = RandomPassword() 
 
 	SmsSender(user.PhoneNumber, user.Password)
-	db.Model(&user).Updates(user)
+	db.Model(&user).Updates(user) 
 
-	c.JSON(http.StatusOK, gin.H{"data": "Success"})
+	c.JSON(http.StatusOK, gin.H{"data": "Success"}) 
 
 }
 
