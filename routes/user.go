@@ -12,6 +12,7 @@ func SetupRoutes(db *gorm.DB) *gin.Engine {
 	r.Use(func(ctx *gin.Context) {
 		ctx.Set("db", db)
 	})
+	r.POST("/auth/login", controllers.Login)
 	r.GET("/users", controllers.FindUsers)
 	r.GET("/users/:phone_number", controllers.FindUser)
 	r.POST("/user", controllers.CreateUser)
