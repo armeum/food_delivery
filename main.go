@@ -1,12 +1,9 @@
 package main
 
 import (
+	"headfirstgo/food_delivery/database"
 	"headfirstgo/food_delivery/models"
 	"headfirstgo/food_delivery/routes"
-	"headfirstgo/food_delivery/database"
-
-	"log"
-	"net/http"
 
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -19,5 +16,4 @@ func main() {
 	r := routes.SetupRoutes(db)
 	r.Run()
 
-	log.Fatal(http.ListenAndServe(":8080", r))
 }
