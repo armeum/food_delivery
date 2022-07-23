@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	"fmt"
 	"headfirstgo/food_delivery/models"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,6 +16,9 @@ type VerifyUser struct {
 }
 
 func verifyPassword(password string) (bool, string) {
+
+	var user VerifyUser
+
 	var err error
 	valid := true
 	msg := "Successfully Logged in"
@@ -21,6 +26,14 @@ func verifyPassword(password string) (bool, string) {
 		msg = "Login or Password is incorrect"
 		valid = false
 	}
+	
+	if user.Password == password {
+		fmt.Println("Successfully logged in")
+	} else {
+		log.Fatal(err)
+
+	}
+
 	return valid, msg
 }
 
@@ -41,7 +54,5 @@ func Verification(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!!"})
 		return
 	}
-
-
 
 }
