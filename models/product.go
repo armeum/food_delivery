@@ -1,9 +1,11 @@
 package models
 
+import "github.com/jinzhu/gorm"
+
 type Product struct {
-	Product_ID uint
-	Name       string
+	gorm.Model
+	Name        string
 	Description string
-	Price uint
-	Image string
+	Price       uint
+	Image       string
 }
