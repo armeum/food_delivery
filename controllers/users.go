@@ -41,7 +41,11 @@ func FindUser(c *gin.Context) {
 	var user models.User
 	db := c.MustGet("db").(*gorm.DB)
 	if err := db.Where("id = ?", c.Param("id")).Find(&user).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!!"})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Route GET:/users/:id not found",
+			"error": "Record not found",
+			"statusCode": 404,
+		})
 		return
 	}
 
@@ -53,7 +57,11 @@ func CreateUser(c *gin.Context) {
 	//validate input
 	var input CreateUserInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Route POST:/user not found",
+			"error": err.Error(),
+			"statusCode": 404,
+		})
 		return
 	}
 
@@ -83,7 +91,11 @@ func UpdateUser(c *gin.Context) {
 	var user models.User
 
 	if err := db.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Rout Patch:/users/:id not found",
+			"error": err.Error(),
+			"statusCode": 404,
+		})
 		return
 	}
 
@@ -107,7 +119,11 @@ func DeleteUser(c *gin.Context) {
 	///get model if exists
 	var user models.User
 	if err := db.Where("id = ?", c.Param("id")).Find(&user).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Route GET:/users/:id not found",
+			"error": err.Error(),
+			"statusCode": 404,
+		})
 		return
 	}
 

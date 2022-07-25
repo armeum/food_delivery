@@ -9,10 +9,11 @@ import (
 )
 
 type SignedDetails struct {
-	First_Name   string
-	Last_Name    string
-	Phone_Number string
+	FirstName   string
+	LastName    string
+	PhoneNumber string
 	Email        string
+	ID int
 	Uid          string
 	jwt.StandardClaims
 }
@@ -20,13 +21,10 @@ type SignedDetails struct {
 // var db *gorm.DB
 var SECRET_KEY = os.Getenv("SECRET_KEY")
 
-func TokenGenerator(firstName string, lastName string, phoneNumber string, email string, uid string) (signedToken string, signedRefreshToken string, err error) {
+func TokenGenerator(ID int, phoneNumber string) (signedToken string, signedRefreshToken string, err error) {
 	claims := &SignedDetails{
-		First_Name:   firstName,
-		Last_Name:    lastName,
-		Phone_Number: phoneNumber,
-		Email:        email,
-		Uid:          uid,
+		PhoneNumber: phoneNumber,
+		ID: ID,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(24)).Unix(),
 		},
