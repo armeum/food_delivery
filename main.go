@@ -15,5 +15,6 @@ func main() {
 
 	r := routes.SetupRoutes(db)
 	r.Run()
-
+	r2 := routes.SetupAuthRoutes(db)
+	r2.Run()
 }

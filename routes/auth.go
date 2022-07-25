@@ -7,18 +7,12 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-func SetupRoutes(db *gorm.DB) *gin.Engine {
+func SetupAuthRoutes(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
 	r.Use(func(ctx *gin.Context) {
 		ctx.Set("db", db)
 	})
-
 	r.POST("/auth/login", controllers.Login)
 	r.POST("/auth/verify", controllers.Verification)
-	r.GET("/users", controllers.FindUsers)
-	r.GET("/users/:id", controllers.FindUser)
-	r.POST("/user", controllers.CreateUser)
-	r.PATCH("/:users/:id", controllers.UpdateUser)
-	r.DELETE("/:users/:id", controllers.DeleteUser)
 	return r
 }
