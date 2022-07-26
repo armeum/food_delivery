@@ -29,8 +29,6 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	r.POST("/product", controllers.CreateProduct)
 	// r.PATCH("/:products/:id", controllers.UpdateProduct)
 	// r.DELETE("/:products/:id", controllers.DeleteProduct)
-
-
 	return r
 }
 
