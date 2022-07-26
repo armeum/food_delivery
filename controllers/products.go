@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"headfirstgo/food_delivery/models"
 	"net/http"
 
@@ -50,7 +51,7 @@ func FindProduct(c *gin.Context) {
 }
 
 func CreateProduct(c *gin.Context) {
-
+	fmt.Println("igfvodkj")
 	//validate input
 	var input CreateProductInput
 	if err := c.ShouldBindJSON(&input); err != nil {
