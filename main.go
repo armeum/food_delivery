@@ -14,6 +14,5 @@ func main() {
 	db.AutoMigrate(&models.User{})
 
 	r := routes.UserRoutes(db)
-	routes.SetupAuthRoutes(db)
 	r.Run()
 }
