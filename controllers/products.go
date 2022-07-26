@@ -4,6 +4,8 @@ import (
 	"headfirstgo/food_delivery/models"
 	"net/http"
 
+	_ "github.com/lib/pq"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
@@ -60,8 +62,7 @@ func CreateProduct(c *gin.Context) {
 		return
 	}
 
-	//Create user
-
+	//Create product
 	product := models.Product{Title: input.Title, Description: input.Description, Price: input.Price, Image: input.Image}
 
 	db := c.MustGet("db").(*gorm.DB)
