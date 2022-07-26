@@ -22,5 +22,24 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	r.POST("/user", controllers.CreateUser)
 	r.PATCH("/:users/:id", controllers.UpdateUser)
 	r.DELETE("/:users/:id", controllers.DeleteUser)
+	r.GET("/products", controllers.FindProducts)
+	r.POST("/product", controllers.CreateProduct)
+
+
 	return r
+}
+
+func ProductRoutes(db *gorm.DB) *gin.Engine {
+	r := gin.Default()
+	r.Use(func(ctx *gin.Context) {
+		ctx.Set("db", db)
+	})
+
+	r.GET("/products", controllers.FindProducts)
+	r.GET("/products/:id", controllers.FindProduct)
+	r.POST("/product", controllers.CreateProduct)
+	r.PATCH("/:products/:id", controllers.UpdateProduct)
+	r.DELETE("/:products/:id", controllers.DeleteProduct)
+	return r
+
 }

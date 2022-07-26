@@ -1,9 +1,9 @@
 package controllers
 
-func AddToBasket () {
+func AddToBasket() {
 
 }
 
-func RemoveFromBasket () {
-	
+func RemoveFromBasket() {
+
 }

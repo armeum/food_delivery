@@ -4,8 +4,8 @@ import "github.com/jinzhu/gorm"
 
 type Product struct {
 	gorm.Model
-	Name        string
-	Description string
-	Price       uint
-	Image       string
+	Title        string `json:"name"`
+	Description string `json:"description"`
+	Price       string  `json:"price"`
+	Image       string 	`json:"image"`
 }

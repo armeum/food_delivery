@@ -42,8 +42,8 @@ func FindUser(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	if err := db.Where("id = ?", c.Param("id")).Find(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Route GET:/users/:id not found",
-			"error": "Record not found",
+			"message":    "Route GET:/users/:id not found",
+			"error":      "Record not found",
 			"statusCode": 404,
 		})
 		return
@@ -58,8 +58,8 @@ func CreateUser(c *gin.Context) {
 	var input CreateUserInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Route POST:/user not found",
-			"error": err.Error(),
+			"message":    "Route POST:/user not found",
+			"error":      err.Error(),
 			"statusCode": 404,
 		})
 		return
@@ -67,7 +67,7 @@ func CreateUser(c *gin.Context) {
 
 	//Create user
 
-	user := models.User{FirstName: input.FirstName, LastName: input.LastName, PhoneNumber: input.PhoneNumber, Email: input.Email,  DateOfBirth: input.DateOfBirth}
+	user := models.User{FirstName: input.FirstName, LastName: input.LastName, PhoneNumber: input.PhoneNumber, Email: input.Email, DateOfBirth: input.DateOfBirth}
 
 	db := c.MustGet("db").(*gorm.DB)
 	db.Create(&user)
@@ -92,8 +92,8 @@ func UpdateUser(c *gin.Context) {
 
 	if err := db.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Rout Patch:/users/:id not found",
-			"error": err.Error(),
+			"message":    "Rout Patch:/users/:id not found",
+			"error":      err.Error(),
 			"statusCode": 404,
 		})
 		return
@@ -105,7 +105,6 @@ func UpdateUser(c *gin.Context) {
 	updateInput.PhoneNumber = input.PhoneNumber
 	updateInput.Email = input.Email
 	updateInput.DateOfBirth = input.DateOfBirth
-
 
 	db.Model(&user).Updates(updateInput)
 
@@ -120,8 +119,8 @@ func DeleteUser(c *gin.Context) {
 	var user models.User
 	if err := db.Where("id = ?", c.Param("id")).Find(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Route GET:/users/:id not found",
-			"error": err.Error(),
+			"message":    "Route GET:/users/:id not found",
+			"error":      err.Error(),
 			"statusCode": 404,
 		})
 		return
@@ -130,5 +129,4 @@ func DeleteUser(c *gin.Context) {
 	db.Delete(&user)
 
 	c.JSON(http.StatusOK, gin.H{"data": user})
-
 }

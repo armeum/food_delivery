@@ -12,9 +12,9 @@ type SignedDetails struct {
 	FirstName   string
 	LastName    string
 	PhoneNumber string
-	Email        string
-	ID int
-	Uid          string
+	Email       string
+	ID          int
+	Uid         string
 	jwt.StandardClaims
 }
 
@@ -24,9 +24,9 @@ var SECRET_KEY = os.Getenv("SECRET_KEY")
 func TokenGenerator(ID int, phoneNumber string) (signedToken string, signedRefreshToken string, err error) {
 	claims := &SignedDetails{
 		PhoneNumber: phoneNumber,
-		ID: ID,
+		ID:          ID,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(24)).Unix(),
+			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(5)).Unix(),
 		},
 	}
 
