@@ -12,14 +12,14 @@ type CreateProductInput struct {
 	gorm.Model
 	Title       string `json:"title"`
 	Description string `json:"description"`
-	Price       string   `json:"price"`
+	Price       string `json:"price"`
 	Image       string `json:"image"`
 }
 type UpdateProductInput struct {
 	gorm.Model
 	Title       string `json:"title"`
 	Description string `json:"description"`
-	Price       string   `json:"price"`
+	Price       string `json:"price"`
 	Image       string `json:"image"`
 }
 
