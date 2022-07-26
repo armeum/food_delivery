@@ -14,6 +14,6 @@ func main() {
 	db.AutoMigrate(&models.User{})
 
 	router := routes.UserRoutes(db)
-	routes.ProductRoutes(db)
+	// routes.ProductRoutes(db)
 	router.Run()
 }

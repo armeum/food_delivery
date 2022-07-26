@@ -27,24 +27,24 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	r.GET("/products", controllers.FindProducts)
 	r.GET("/products/:id", controllers.FindProduct)
 	r.POST("/product", controllers.CreateProduct)
-	r.PATCH("/:products/:id", controllers.UpdateProduct)
-	r.DELETE("/:products/:id", controllers.DeleteProduct)
+	// r.PATCH("/:products/:id", controllers.UpdateProduct)
+	// r.DELETE("/:products/:id", controllers.DeleteProduct)
 
 
 	return r
 }
 
-func ProductRoutes(db *gorm.DB) *gin.Engine {
-	r := gin.Default()
-	r.Use(func(ctx *gin.Context) {
-		ctx.Set("db", db)
-	})
+// func ProductRoutes(db *gorm.DB) *gin.Engine {
+// 	r := gin.Default()
+// 	r.Use(func(ctx *gin.Context) {
+// 		ctx.Set("db", db)
+// 	})
 
-	r.GET("/products", controllers.FindProducts)
-	r.GET("/products/:id", controllers.FindProduct)
-	r.POST("/product", controllers.CreateProduct)
-	r.PATCH("/:products/:id", controllers.UpdateProduct)
-	r.DELETE("/:products/:id", controllers.DeleteProduct)
-	return r
+// 	r.GET("/products", controllers.FindProducts)
+// 	r.GET("/products/:id", controllers.FindProduct)
+// 	r.POST("/product", controllers.CreateProduct)
+// 	r.PATCH("/:products/:id", controllers.UpdateProduct)
+// 	r.DELETE("/:products/:id", controllers.DeleteProduct)
+// 	return r
 
-}
+// }
