@@ -3,7 +3,6 @@ package database
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/jinzhu/gorm"
 )
@@ -11,19 +10,27 @@ import (
 var db *gorm.DB
 var err error
 
+const (
+	host     = "localhost"
+	port     = "5432"
+	user     = "postgres"
+	password = "0990"
+	dbname   = "food_delivery"
+)
+
 func SetupPostgres() *gorm.DB {
 	//Loading environment variables
 
-	dialect := os.Getenv("DIALECT")
-	host := os.Getenv("HOST")
-	dbName := os.Getenv("NAME")
-	dbPort := os.Getenv("DBPORT")
-	user := os.Getenv("USER")
-	password := os.Getenv("PASSWORD")
+	// dialect := os.Getenv("DIALECT")
+	// host := os.Getenv("HOST")
+	// dbname := os.Getenv("NAME")
+	// port := os.Getenv("DBPORT")
+	// user := os.Getenv("USER")
+	// password := os.Getenv("PASSWORD")
 	//Databse connection string
-	dbURI := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s port=%s", host, user, dbName, password, dbPort)
+	dbURI := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s port=%s", host, user, dbname, password, port)
 	//opening connection to database
-	db, err = gorm.Open(dialect, dbURI)
+	db, err = gorm.Open("postgres", dbURI)
 	if err != nil {
 		log.Fatal(err)
 	}
