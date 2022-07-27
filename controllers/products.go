@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"headfirstgo/food_delivery/models"
 	"net/http"
 
@@ -51,7 +50,6 @@ func FindProduct(c *gin.Context) {
 }
 
 func CreateProduct(c *gin.Context) {
-	fmt.Println("igfvodkj")
 	//validate input
 	var input CreateProductInput
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -89,7 +87,7 @@ func UpdateProduct(c *gin.Context) {
 
 	if err := db.Where("id = ?", c.Param("id")).First(&product).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message":    "Rout Patch:/users/:id not found",
+			"message":    "Rout Patch:/products/:id not found",
 			"error":      err.Error(),
 			"statusCode": 404,
 		})
@@ -115,7 +113,7 @@ func DeleteProduct(c *gin.Context) {
 	var product models.Product
 	if err := db.Where("id = ?", c.Param("id")).Find(&product).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message":    "Route GET:/users/:id not found",
+			"message":    "Route GET:/products/:id not found",
 			"error":      err.Error(),
 			"statusCode": 404,
 		})
