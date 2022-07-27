@@ -13,8 +13,7 @@ func main() {
 	db := database.SetupPostgres()
 	db.AutoMigrate(&models.User{}, &models.Product{}, &models.Order{})
 
-	router := routes.UserRoutes(db)
+	r := routes.UserRoutes(db)
 	routes.ProductRoutes(db)
-	// routes.ProductRoutes(db)
-	router.Run()
+	r.Run()
 }
