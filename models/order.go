@@ -1,11 +1,7 @@
 package models
 
-import "github.com/jinzhu/gorm"
-
 type Order struct {
-	gorm.Model
-	Name       string `json:"name"`
-	Description string `json:"description"`
-	Price       string `json:"price"`
-	Image       string `json:"image"`
+	ID    uint    `json:"id"`
+	Items []Item  `json:"items" bson:"items"`
+	Total float64 `json:"total" bson:"total"`
 }
