@@ -11,7 +11,7 @@ import (
 func AddToPizza(c *gin.Context) {
 
 	//get model if exists
-	var pizza models.Pizza
+	var pizza models.Product
  	db := c.MustGet("db").(*gorm.DB)
 	if err := db.Where("title = ?", c.Param("title")).Find(&pizza).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -26,4 +26,16 @@ func AddToPizza(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": pizza})
 
+}
+
+func AddToSnacks() {
+
+}
+
+func AddToDeserts() {
+	
+}
+
+func AddToSalad() {
+	
 }
