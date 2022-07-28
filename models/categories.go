@@ -1,7 +1,7 @@
 package models
 
 type Pizza struct {
-	Product []Product `json:"product"`
+	Items []string `json:"product"`
 }
 
 type Snacks struct {
