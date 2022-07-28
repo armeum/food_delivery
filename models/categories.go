@@ -1,9 +1,5 @@
 package models
 
-type Sales struct {
-	Product []Product `json:"product"`
-}
-
 type Pizza struct {
 	Product []Product `json:"product"`
 }
