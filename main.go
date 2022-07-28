@@ -11,7 +11,7 @@ import (
 func main() {
 	//close databse when the main func is finishes
 	db := database.SetupPostgres()
-	db.AutoMigrate(&models.User{}, &models.Product{}, &models.Sales{}, &models.Snacks{}, &models.Pizza{}, &models.Beverages{}, &models.Salads{}, &models.Deserts{})
+	db.AutoMigrate(&models.User{}, &models.Product{}, &models.Snacks{}, &models.Pizza{}, &models.Beverages{}, &models.Salads{}, &models.Deserts{})
 
 	r := routes.UserRoutes(db)
 	// routes.ProductRoutes(db)
