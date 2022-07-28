@@ -11,7 +11,7 @@ import (
 
 func AddItemToBasket(c *gin.Context) {
 	//get model if exists
-	var item models.Item
+	var item models.Product
 	db := c.MustGet("db").(*gorm.DB)
 	if err := db.Where("id = ?", c.Param("id")).Find(&item).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
