@@ -9,11 +9,11 @@ import (
 )
 
 func AddToPizza(c *gin.Context) {
-
+	var pizza []models.Pizza
 	//get model if exists
-	var pizza models.Product
+	var product models.Product
  	db := c.MustGet("db").(*gorm.DB)
-	if err := db.Where("title = ?", c.Param("title")).Find(&pizza).Error; err != nil {
+	if err := db.Where("title = ?", c.Param("title")).Find(&product).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/product/:id not found",
 			"error":      "Record not found",
@@ -24,11 +24,17 @@ func AddToPizza(c *gin.Context) {
 
 	//get input model
 
-	c.JSON(http.StatusOK, gin.H{"data": pizza})
+	c.JSON(http.StatusOK, gin.H{"data": product})
+
+	addProduct := db.Create(&product)
+
+	adding := append(pizza, )
 
 }
 
 func AddToSnacks() {
+
+
 
 }
 
@@ -37,5 +43,9 @@ func AddToDeserts() {
 }
 
 func AddToSalad() {
+	
+}
+
+func AddToBeverage() {
 	
 }
