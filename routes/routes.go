@@ -29,7 +29,7 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	r.GET("/products", controllers.FindProducts)
 	r.GET("/products/:id", controllers.FindProductById)
 	r.GET("/product/:title", controllers.FindProductByTitle)
-	r.POST("/product",  controllers.CreateProduct)
+	r.POST("/product",  controllers.AddProduct)
 	r.PATCH("/products/:id", controllers.UpdateProduct)
 	r.DELETE("/products/:id", controllers.DeleteProduct)
 

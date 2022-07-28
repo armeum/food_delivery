@@ -10,7 +10,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type CreateProductInput struct {
+type AddProductInput struct {
 	gorm.Model
 	Title       string  `json:"title"`
 	Description string  `json:"description"`
@@ -65,9 +65,9 @@ func FindProductByTitle(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": product})
 }
 
-func CreateProduct(c *gin.Context) {
+func AddProduct(c *gin.Context) {
 	//validate input
-	var input CreateProductInput
+	var input AddProductInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route POST:/product not found",
