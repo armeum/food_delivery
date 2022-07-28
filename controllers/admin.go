@@ -67,7 +67,7 @@ func AdminFindProductByTitle(c *gin.Context) {
 
 func AdminCreateProduct(c *gin.Context) {
 	//validate input
-	var input CreateProductInput
+	var input AddProductInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route POST:/admin_product not found",
