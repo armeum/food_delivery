@@ -27,7 +27,8 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 
 	//////products routes///////
 	r.GET("/products", controllers.FindProducts)
-	r.GET("/products/:id", controllers.FindProduct)
+	r.GET("/products/:id", controllers.FindProductById)
+	r.GET("/product/:title", controllers.FindProductByTitle)
 	r.POST("/product",  controllers.CreateProduct)
 	r.PATCH("/products/:id", controllers.UpdateProduct)
 	r.DELETE("/products/:id", controllers.DeleteProduct)
@@ -35,7 +36,8 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 
 	///////admin routes/////////
 	r.GET("/admin_products", controllers.AdminFindProducts)
-	r.GET("/admin_products/:id", controllers.AdminFindProduct)
+	r.GET("/admin_products/:id", controllers.AdminFindProductById)
+	r.GET("/admin_product/:title", controllers.AdminFindProductByTitle)
 	r.POST("/admin_product", controllers.AdminCreateProduct)
 	r.PATCH("/admin_products/:id", controllers.AdminUpdateProduct)
 	r.DELETE("/admin_products/:id", controllers.AdminDeleteProduct)
