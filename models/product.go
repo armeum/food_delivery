@@ -8,5 +8,5 @@ type Product struct {
 	Description string  `json:"description"`
 	Price       string `json:"price"`
 	Image       string  `json:"image"`
-	Category    []Category  `gorm:"one2many:products_categories;"`
+	Category    []Category  `gorm:"one2many:categories_products;"`
 }
