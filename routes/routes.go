@@ -42,5 +42,8 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	r.PATCH("/admin_products/:id", controllers.AdminUpdateProduct)
 	r.DELETE("/admin_products/:id", controllers.AdminDeleteProduct)
 
+	/////basket routes/////////
+	// r.GET("/basket", controllers.AddItemToBasket)
+
 	return r
 }

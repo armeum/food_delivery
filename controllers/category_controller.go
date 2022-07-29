@@ -8,8 +8,34 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+type AddCategoryInput struct {
+	gorm.Model
+	Products []models.Product `json:"products"`
+}
+
+func CreateCategory(c *gin.Context) {
+
+	var category models.Category
+	if err := c.ShouldBindJSON(&category); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message":    "Route POST:/product not found",
+			"error":      err.Error(),
+			"statusCode": 404,
+		})
+		return
+	}
+
+	//Create category
+	categories := models.Category{Name: category.Name}
+
+	db := c.MustGet("db").(*gorm.DB)
+	db.Create(&categories)
+
+	c.JSON(http.StatusOK, gin.H{"data": categories})
+}
+
 func AddToPizza(c *gin.Context) {
-	// var pizza []models.Pizza
+
 	//get model if exists
 	var product models.Product
 	db := c.MustGet("db").(*gorm.DB)
@@ -22,24 +48,12 @@ func AddToPizza(c *gin.Context) {
 		return
 	}
 
+	// var items models.Pizza
+
+	// add := []models.Pizza, &product
+
 	//get input model
 
-	c.JSON(http.StatusOK, gin.H{"data": product})
-
-}
-
-func AddToSnacks() {
-
-}
-
-func AddToDeserts() {
-
-}
-
-func AddToSalad() {
-
-}
-
-func AddToBeverage() {
+	// c.JSON(http.StatusOK, gin.H{"data": adding})
 
 }
