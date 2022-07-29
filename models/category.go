@@ -5,12 +5,11 @@ import "github.com/jinzhu/gorm"
 type Category struct {
 	gorm.Model
 	Name string `json:"name"`
-	Pizza []Pizza `json:"pizza"`
-
+	Image string `json:"image"`
 }
 
-
-type Pizza struct {
-	gorm.Model
-	Products    []Product    `gorm:"product"`
+type ProductCategory struct {
+	Category Category `json:"category"`
+	Product Product `json:"product"`
 }
+
