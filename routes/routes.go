@@ -43,7 +43,7 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	r.DELETE("/admin_products/:id", controllers.AdminDeleteProduct)
 
 	/////category routes/////////
-	r.GET("/category_products/:title", controllers.AddPtoductToCategory)
+	r.POST("/category_products/:title", controllers.AddPtoductToCategory)
 	
 
 	

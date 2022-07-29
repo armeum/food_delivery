@@ -3,6 +3,7 @@ package controllers
 import (
 	"headfirstgo/food_delivery/models"
 	"net/http"
+	"strconv"
 
 	_ "github.com/lib/pq"
 
@@ -78,7 +79,7 @@ func AdminCreateProduct(c *gin.Context) {
 	}
 
 	//Create product
-	product := models.Product{Title: input.Title, Description: input.Description, Price: input.Price, Image: input.Image}
+	product := models.Product{Title: input.Title, Description: input.Description, Price: strconv.FormatFloat(input.Price, 'f', 3, 64), Image: input.Image}
 
 	db := c.MustGet("db").(*gorm.DB)
 	db.Create(&product)
@@ -113,7 +114,7 @@ func AdminUpdateProduct(c *gin.Context) {
 	var updateInput models.Product
 	updateInput.Title = input.Title
 	updateInput.Description = input.Description
-	updateInput.Price = input.Price
+	updateInput.Price = strconv.FormatFloat(input.Price, 'f', 3, 64)
 	updateInput.Image = input.Image
 
 	db.Model(&product).Updates(updateInput)

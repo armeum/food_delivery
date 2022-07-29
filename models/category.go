@@ -13,3 +13,11 @@ type ProductCategory struct {
 	Product Product `json:"product"`
 }
 
+type Pizza struct {
+	Product []Product `json:"product"`
+}
+
+type Salads struct {
+	Product []Product `json:"product"`
+}
+

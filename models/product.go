@@ -6,7 +6,7 @@ type Product struct {
 	gorm.Model
 	Title       string  `json:"name"`
 	Description string  `json:"description"`
-	Price       float64 `json:"price"`
+	Price       string `json:"price"`
 	Image       string  `json:"image"`
-	Category    []Category  `json:"category"`
+	Category    string  `json:"category"`
 }
