@@ -8,10 +8,10 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type AddToCategory struct {
-	Category models.Category `json:"category"`
-	Product  models.Product  `json:"product"`
-}
+// type AddToCategory struct {
+// 	Category string `json:"category"`
+// 	Product  models.Product  `json:"product"`
+// }
 
 func AddPtoductToCategory(c *gin.Context) {
 	//get model if exists
@@ -26,24 +26,9 @@ func AddPtoductToCategory(c *gin.Context) {
 		return
 	}
 
-	var category AddToCategory
+	var category models.Category
 
-	var products models.Product
-	var pizzaCategory []models.Pizza
-	var saladsCategory []models.Salads
-
-	//Create product
-	categories := models.ProductCategory{Category: category.Category, Product: product}	
-
-	if products.Category == "Пицца" {
-		add := append(pizzaCategory, &product)
-		c.JSON(http.StatusOK, gin.H{"data": add})
-	} else if products.Category == "Салаты" {
-		add := append(saladsCategory, &product)
-		c.JSON(http.StatusOK, gin.H{"data": add})
-	}
-
-	c.JSON(http.StatusOK, gin.H{"data": categories})
+	c.JSON(http.StatusOK, gin.H{"data": category})
 
 
 }
