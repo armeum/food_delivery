@@ -14,8 +14,3 @@ type Pizza struct {
 	gorm.Model
 	Products    []Product    `gorm:"product"`
 }
-
-// type Salads struct {
-// 	gorm.Model
-// 	Products    []Product    `gorm:"product"`
-// }
