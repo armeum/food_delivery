@@ -8,6 +8,8 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+
+
 // type AddToCategory struct {
 // 	Category string `json:"category"`
 // 	Product  models.Product  `json:"product"`
