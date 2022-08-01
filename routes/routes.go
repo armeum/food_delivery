@@ -34,15 +34,16 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	r.DELETE("/products/:id", controllers.DeleteProduct)
 
 	///////admin routes/////////
-	r.GET("/admin_products", controllers.AdminFindProducts)
-	r.GET("/admin_products/:id", controllers.AdminFindProductById)
-	r.GET("/admin_product/:title", controllers.AdminFindProductByTitle)
-	r.POST("/admin_product", controllers.AdminCreateProduct)
-	r.PATCH("/admin_products/:id", controllers.AdminUpdateProduct)
-	r.DELETE("/admin_products/:id", controllers.AdminDeleteProduct)
+	// r.GET("/admin_products", controllers.AdminFindProducts)
+	// r.GET("/admin_products/:id", controllers.AdminFindProductById)
+	// r.GET("/admin_product/:title", controllers.AdminFindProductByTitle)
+	// r.POST("/admin_product", controllers.AdminCreateProduct)
+	// r.PATCH("/admin_products/:id", controllers.AdminUpdateProduct)
+	// r.DELETE("/admin_products/:id", controllers.AdminDeleteProduct)
 
-	/////category routes/////////
-	// r.POST("/category_products/:title", controllers.AddPtoductToCategory)
-
+	///category routes/////////
+	r.POST("/createCategory", controllers.CreateCategory)
+	r.GET("/getCategory", controllers.GetCategories)
+	r.GET("/getPizza/:category_id", controllers.GetAllPizza)
 	return r
 }

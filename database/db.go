@@ -18,7 +18,7 @@ const (
 	dbname   = "food_delivery"
 )
 
-func SetupPostgres() *gorm.DB {
+func SetupPostgres() (*gorm.DB) {
 	//Loading environment variables
 
 	// dialect := os.Getenv("DIALECT")
@@ -37,3 +37,4 @@ func SetupPostgres() *gorm.DB {
 	return db
 
 }
+

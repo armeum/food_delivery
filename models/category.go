@@ -1,10 +1,8 @@
 package models
 
-import "github.com/jinzhu/gorm"
-
 type Category struct {
-	gorm.Model
-
-	Product []Product `gorm:"many2one:products_categories;"`
-
+	ID           int      `gorm:"primary_key, AUTO_INCREMENT"`
+	CategoryName string    `json:"category_name"`
+	Products     []Product `gorm:"foreignKey:CategoryID"`
 }
+

@@ -3,7 +3,6 @@ package controllers
 import (
 	"headfirstgo/food_delivery/models"
 	"net/http"
-	"strconv"
 
 	_ "github.com/lib/pq"
 
@@ -13,19 +12,23 @@ import (
 
 type AddProductInput struct {
 	gorm.Model
-	Title       string  `json:"title"`
-	Description string  `json:"description"`
-	Price       float64 `json:"price"`
-	Image       string  `json:"image"`
+	Title       string          `gorm:"column:title" json:"title"`
+	Description string          `gorm:"column:description" json:"description"`
+	Price       string          `gorm:"column:price" json:"price"`
+	Image       string          `gorm:"column:image" json:"image"`
+	CategoryID  int             `gorm:"column:category_id" json:"category_id"`
+	Category    models.Category `json:"category"`
 }
 type UpdateProductInput struct {
 	gorm.Model
-	Title       string  `json:"title"`
-	Description string  `json:"description"`
-	Price       float64 `json:"price"`
-	Image       string  `json:"image"`
+	Title       string          `gorm:"column:title" json:"title"`
+	Description string          `gorm:"column:description" json:"description"`
+	Price       string          `gorm:"column:price" json:"price"`
+	Image       string          `gorm:"column:image" json:"image"`
+	CategoryID  int             `gorm:"column:category_id" json:"category_id"`
+	Category    models.Category `json:"category"`
 }
-
+//////Find All Products
 func FindProducts(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var products []models.Product
@@ -34,6 +37,7 @@ func FindProducts(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": products})
 }
 
+//////Find Products By its Id/////
 func FindProductById(c *gin.Context) {
 	//get model if exists
 	var product models.Product
@@ -50,6 +54,7 @@ func FindProductById(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": product})
 }
 
+//////////////Find Product By its Title
 func FindProductByTitle(c *gin.Context) {
 	//get model if exists
 	var product models.Product
@@ -66,6 +71,7 @@ func FindProductByTitle(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": product})
 }
 
+//////Adding Product
 func AddProduct(c *gin.Context) {
 	//validate input
 	var input AddProductInput
@@ -77,32 +83,24 @@ func AddProduct(c *gin.Context) {
 		})
 		return
 	}
-
 	//Create product
-	
-	product := models.Product{Title: input.Title, Description: input.Description, Price: strconv.FormatFloat(input.Price, 'f', 3, 64), Image: input.Image}
-
+	product := models.Product{Title: input.Title, Description: input.Description, Price: input.Price, Image: input.Image, CategoryID: int(input.ID)}
 	db := c.MustGet("db").(*gorm.DB)
 	db.Create(&product)
-
 	c.JSON(http.StatusOK, gin.H{"data": product})
-
 }
 
+///Updating Product
 func UpdateProduct(c *gin.Context) {
-
 	var input UpdateProductInput
 	//Validate input
-
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
 	db := c.MustGet("db").(*gorm.DB)
 	//Get model if exists
 	var product models.Product
-
 	if err := db.Where("id = ?", c.Param("id")).First(&product).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Rout Patch:/products/:id not found",
@@ -111,12 +109,13 @@ func UpdateProduct(c *gin.Context) {
 		})
 		return
 	}
-
+	/////Updating ProductInputs
 	var updateInput models.Product
 	updateInput.Title = input.Title
 	updateInput.Description = input.Description
-	updateInput.Price = strconv.FormatFloat(input.Price, 'f', 3, 64)
+	updateInput.Price = input.Price
 	updateInput.Image = input.Image
+	updateInput.CategoryID = input.CategoryID
 
 	db.Model(&product).Updates(updateInput)
 
@@ -124,9 +123,9 @@ func UpdateProduct(c *gin.Context) {
 
 }
 
+/////Deleting Products
 func DeleteProduct(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
-
 	///get model if exists
 	var product models.Product
 	if err := db.Where("id = ?", c.Param("id")).Find(&product).Error; err != nil {
@@ -137,9 +136,7 @@ func DeleteProduct(c *gin.Context) {
 		})
 		return
 	}
-
 	db.Delete(&product)
-
 	c.JSON(http.StatusOK, gin.H{"data": product})
 
 }
