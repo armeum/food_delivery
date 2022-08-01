@@ -48,12 +48,13 @@ func CreateCategory(c *gin.Context) {
 	db.Create(&category)
 	c.JSON(http.StatusOK, gin.H{"data": category})
 }
+
 ////Getting Pizza Category
-func GetAllPizza(c *gin.Context) {
+func GetCategoryById(c *gin.Context) {
 	//get model if exists
-	var product models.Product
+	var categories models.Category
 	db := c.MustGet("db").(*gorm.DB)
-	if err := db.Where("category_id <> ?", 1).Find(&product).Error; err != nil {
+	if err := db.Where("category_id = ?", c.Param("category_id")).Find(&categories).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/getPizza not found",
 			"error":      "Record not found",
@@ -62,5 +63,5 @@ func GetAllPizza(c *gin.Context) {
 		return
 
 	}
-	c.JSON(http.StatusOK, gin.H{"data": &product})
+	c.JSON(http.StatusOK, gin.H{"data": &categories})
 }
