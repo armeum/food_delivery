@@ -11,9 +11,5 @@ type Product struct {
 	Price       string   `gorm:"column:price" json:"price"`
 	Image       string   `gorm:"column:image" json:"image"`
 	CategoryID  int      `gorm:"column:category_id" json:"category_id"`
-	// Category    Category `json:"category"`
-}
-
-func (product *Product) TableName() string {
-	return "product"
+	Category    Category `json:"category"`
 }

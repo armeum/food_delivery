@@ -20,15 +20,12 @@ type LoginBody struct {
 }
 
 func Login(c *gin.Context) {
-
 	//validate input
 	var input LoginBody
-
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
 	//get model if exists
 	var user models.User
 	db := c.MustGet("db").(*gorm.DB)
@@ -41,10 +38,8 @@ func Login(c *gin.Context) {
 		return
 	}
 	user.Password = RandomPassword()
-
 	SmsSender(user.PhoneNumber, user.Password)
 	db.Model(&user).Updates(user)
-
 }
 
 func RandomPassword() string {
@@ -70,33 +65,24 @@ func SmsSender(phone string, password string) {
 	}
 
 	var res map[string]interface{}
-
 	json.NewDecoder(resp.Body).Decode(&res)
-
 	fmt.Println(res["json"], "res")
-
 }
 
 func test(phone string, password string) {
-
 	num := strconv.Itoa(-1001685855235)
 	httpposturl := fmt.Sprintf("https://api.telegram.org/bot5497289382:AAEAuBV4_JOoU1qwIo9RPktV9X1l7FfOG7o/sendMessage?chat_id=%s&text=%s+%s", num, phone, password)
-
 	var jsonData = []byte(`{
         "text": phone,
         "job": "leader"
     }`)
-
 	request, _ := http.NewRequest("POST", httpposturl, bytes.NewBuffer(jsonData))
 	request.Header.Set("Content-Type", "application/json; charset=UTF-8")
-
 	client := &http.Client{}
 	response, error := client.Do(request)
 	if error != nil {
 		panic(error)
 	}
-
 	fmt.Println("response Status:", response.Status)
-
 	defer response.Body.Close()
 }
