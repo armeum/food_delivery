@@ -4,6 +4,7 @@ import (
 	"food_delivery/database"
 	"food_delivery/models"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -15,10 +16,12 @@ import (
 func GetAllCategories(c *gin.Context) {
 	var categories []models.Category
 	db := database.SetupPostgres()
-	// limit := c.Query("limit") ?limit=10&page=1
-	page := 1
-	limit := 10 // limit stringda keladi buni numberligi chek qiib numberga ->
-	if err := db.Preload("Product").Limit(limit).Take((page - 1) * limit).Find(&categories).Error; err != nil {
+	// limit := c.Query("limit") ?limit=10&page=1 /////.Take((page - 1) * limitInt)
+	// page := 1
+	limit := "10"
+	limitInt, _ := strconv.Atoi(limit)
+	// limit stringda keladi buni numberligi chek qiib numberga ->
+	if err := db.Preload("Product").Limit(limitInt).Find(&categories).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/getAllCategories not found",
 			"error":      "Record not found",
