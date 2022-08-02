@@ -1,8 +1,11 @@
 package models
 
 type Category struct {
-	ID           int      `gorm:"primary_key, AUTO_INCREMENT"`
-	CategoryName string    `json:"category_name"`
-	Products     []Product `gorm:"foreignKey:CategoryID"`
+	CategoryID   int       `gorm:"column:category_id;primary_key" json:"category_id" `
+	CategoryName string    `gorm:"column:category_name" json:"category_name"`
+	Product      []Product `gorm:"column:product;foreignkey:category_id" json:"product"`
 }
 
+func (category *Category) TableName() string {
+	return "category"
+}

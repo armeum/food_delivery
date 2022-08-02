@@ -12,12 +12,15 @@ import (
 // type CategoryModel struct {
 // }
 
-func GetCategories(c *gin.Context) {
+func GetAllCategories(c *gin.Context) {
 	var categories []models.Category
 	db := database.SetupPostgres()
-	if err := db.Preload("Products").Find(&categories).Error; err != nil {
+	// limit := c.Query("limit") ?limit=10&page=1
+	page := 1
+	limit := 10 // limit stringda keladi buni numberligi chek qiib numberga ->
+	if err := db.Preload("Product").Limit(limit).Take((page - 1) * limit).Find(&categories).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message":    "Route GET:/getPizza not found",
+			"message":    "Route GET:/getAllCategories not found",
 			"error":      "Record not found",
 			"statusCode": 404,
 		})
@@ -36,7 +39,7 @@ func CreateCategory(c *gin.Context) {
 	var input AddCategoryInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message":    "Route POST:/product not found",
+			"message":    "Route POST:/createCategory not found",
 			"error":      err.Error(),
 			"statusCode": 404,
 		})
@@ -54,14 +57,20 @@ func GetCategoryById(c *gin.Context) {
 	//get model if exists
 	var categories models.Category
 	db := c.MustGet("db").(*gorm.DB)
-	if err := db.Where("category_id = ?", c.Param("category_id")).Find(&categories).Error; err != nil {
+	println(c.Param("category_id"))
+
+	if err := db.Where("category_id = ?", c.Param("category_id")).Preload("Product", "category_id = ?", c.Param("category_id")).Find(&categories).Error; err != nil {
+
+		// db.Preload("Orders", "state = ?", "paid").Preload("Orders.OrderItems").Find(&users)
+
+		// if err := db.Where("category_id = ?", c.Param("category_id")).First(&categories).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message":    "Route GET:/getPizza not found",
+			"message":    "Route GET:/getCategories not found",
 			"error":      "Record not found",
 			"statusCode": 404,
 		})
 		return
 
 	}
-	c.JSON(http.StatusOK, gin.H{"data": &categories})
+	c.JSON(http.StatusOK, gin.H{"data": categories})
 }

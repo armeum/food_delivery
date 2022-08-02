@@ -12,22 +12,21 @@ import (
 
 type AddProductInput struct {
 	gorm.Model
-	Title       string          `gorm:"column:title" json:"title"`
-	Description string          `gorm:"column:description" json:"description"`
-	Price       string          `gorm:"column:price" json:"price"`
-	Image       string          `gorm:"column:image" json:"image"`
-	CategoryID  int             `gorm:"column:category_id" json:"category_id"`
-	Category    models.Category `json:"category"`
+	Title       string `gorm:"column:title" json:"title"`
+	Description string `gorm:"column:description" json:"description"`
+	Price       int    `gorm:"column:price" json:"price"`
+	Image       string `gorm:"column:image" json:"image"`
+	CategoryID  int    `gorm:"column:category_id" json:"category_id"`
 }
 type UpdateProductInput struct {
 	gorm.Model
-	Title       string          `gorm:"column:title" json:"title"`
-	Description string          `gorm:"column:description" json:"description"`
-	Price       string          `gorm:"column:price" json:"price"`
-	Image       string          `gorm:"column:image" json:"image"`
-	CategoryID  int             `gorm:"column:category_id" json:"category_id"`
-	Category    models.Category `json:"category"`
+	Title       string `gorm:"column:title" json:"title"`
+	Description string `gorm:"column:description" json:"description"`
+	Price       int    `gorm:"column:price" json:"price"`
+	Image       string `gorm:"column:image" json:"image"`
+	CategoryID  int    `gorm:"column:category_id" json:"category_id"`
 }
+
 //////Find All Products
 func FindProducts(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
@@ -84,7 +83,7 @@ func AddProduct(c *gin.Context) {
 		return
 	}
 	//Create product
-	product := models.Product{Title: input.Title, Description: input.Description, Price: input.Price, Image: input.Image, CategoryID: int(input.ID)}
+	product := models.Product{Title: input.Title, Description: input.Description, Price: input.Price, Image: input.Image, CategoryID: input.CategoryID}
 	db := c.MustGet("db").(*gorm.DB)
 	db.Create(&product)
 	c.JSON(http.StatusOK, gin.H{"data": product})
