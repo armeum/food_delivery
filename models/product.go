@@ -1,6 +1,9 @@
 package models
 
+import "github.com/jinzhu/gorm"
+
 type Product struct {
+	gorm.Model
 	ProductId   int    `gorm:"column:product_id;primary_key" json:"product_id"`
 	Title       string `gorm:"column:title" json:"title"`
 	Description string `gorm:"column:description" json:"description"`

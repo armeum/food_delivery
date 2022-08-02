@@ -15,6 +15,6 @@ func main() {
 
 	r := routes.UserRoutes(db)
 	// routes.ProductRoutes(db)
-	r.Run()
+	r.Run(":8080")
 
 }
