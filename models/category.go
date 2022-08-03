@@ -1,8 +1,10 @@
 package models
 
+import "github.com/jinzhu/gorm"
+
 type Category struct {
-	CategoryID   int       `gorm:"column:category_id;primary_key" json:"category_id" `
-	CategoryName string    `gorm:"column:category_name" json:"category_name"`
+	gorm.Model
+	CategoryName string    `gorm:"column:category_name" json:"name"`
 	Product      []Product `gorm:"column:product;foreignkey:category_id" json:"product"`
 }
 

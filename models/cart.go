@@ -1,7 +1,13 @@
 package models
 
+import "github.com/jinzhu/gorm"
+
 type Cart struct {
-	CartID int     `gorm:"primary_key, AUTO_INCREMENT"`
-	UserID uint    `json:"user_id"`
-	Order  []Order `gorm:"foreignKey:CartID" json:"order"`
+	gorm.Model
+	UserID  int      `gorm:"column:user_id;foreignKey:id" json:"user_id"`
+	Product []Product `gorm:"column:product;foreignKey:id" json:"products"`
+}
+
+func (cart *Cart) TableName() string {
+	return "cart"
 }
