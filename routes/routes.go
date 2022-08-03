@@ -36,9 +36,10 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	///category routes/////////
 	r.POST("/createCategory", controllers.CreateCategory)
 	r.GET("/getAllCategories", controllers.GetAllCategories)
-	r.GET("/categories/:category_id", controllers.GetCategoryById)
+	r.GET("/categories/:id", controllers.GetCategoryById)
 
 	////cart routes/////////
-	r.GET("/getCart/:user_id", controllers.GetCart)
+	r.GET("/createOrder", controllers.CreateOrder)
+	r.GET("/getCart/:id", controllers.GetCartByUserId)
 	return r
 }

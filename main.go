@@ -5,7 +5,7 @@ import (
 	"headfirstgo/food_delivery/models"
 	"headfirstgo/food_delivery/routes"
 
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm"
 )
 
 func main() {

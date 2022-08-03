@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	"encoding/json"
 	"headfirstgo/food_delivery/models"
+	"io/ioutil"
 	"net/http"
 
 	_ "github.com/lib/pq"
@@ -14,9 +16,9 @@ type AddProductInput struct {
 	gorm.Model
 	Title       string `gorm:"column:title" json:"title"`
 	Description string `gorm:"column:description" json:"description"`
-	Price       int    `gorm:"column:price" json:"price"`
+	Price       int    `gorm:"column:price"`
 	Image       string `gorm:"column:image" json:"image"`
-	CategoryID  int    `gorm:"column:category_id" json:"category_id"`
+	CategoryID  int    `gorm:"column:category_id;foreignkey:product_id" json:"category_id"`
 }
 type UpdateProductInput struct {
 	gorm.Model
@@ -24,7 +26,7 @@ type UpdateProductInput struct {
 	Description string `gorm:"column:description" json:"description"`
 	Price       int    `gorm:"column:price" json:"price"`
 	Image       string `gorm:"column:image" json:"image"`
-	CategoryID  int    `gorm:"column:category_id" json:"category_id"`
+	CategoryID  int    `gorm:"column:category_id;foreignkey:product_id" json:"category_id"`
 }
 
 //////Find All Products
@@ -74,6 +76,12 @@ func FindProductByTitle(c *gin.Context) {
 func AddProduct(c *gin.Context) {
 	//validate input
 	var input AddProductInput
+	db := c.MustGet("db").(*gorm.DB)
+	// priceInput := strconv.Itoa(input.Price)
+	file, _ := ioutil.ReadFile("products.json")
+	data := input
+	_ = json.Unmarshal([]byte(file), &data)
+
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route POST:/product not found",
@@ -83,8 +91,7 @@ func AddProduct(c *gin.Context) {
 		return
 	}
 	//Create product
-	product := models.Product{Title: input.Title, Description: input.Description, Price: input.Price, Image: input.Image, CategoryID: input.CategoryID}
-	db := c.MustGet("db").(*gorm.DB)
+	product := models.Product{Title: input.Title, Description: input.Description, Price: data.Price, Image: input.Image, CategoryID: input.CategoryID}
 	db.Create(&product)
 	c.JSON(http.StatusOK, gin.H{"data": product})
 }

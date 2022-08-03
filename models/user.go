@@ -12,5 +12,5 @@ type User struct {
 	Email       string `gorm:"typevarchar(100);unique_index" json:"email"`
 	DateOfBirth string `json:"date_of_birth"`
 	Password    string `json:"password"`
-	Cart        []Cart `gorm:"ForeignKey:UserID" json:"cart"`
+	Cart        Cart `gorm:"ForeignKey:id" json:"cart"`
 }
