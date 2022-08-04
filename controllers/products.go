@@ -33,7 +33,7 @@ type UpdateProductInput struct {
 func FindProducts(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var products []models.Product
-	db.Find(&products)
+	db.Order("category_id ASC").Find(&products)
 
 	c.JSON(http.StatusOK, gin.H{"data": products})
 }
