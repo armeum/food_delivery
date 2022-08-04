@@ -26,7 +26,7 @@ func TokenGenerator(ID int, phoneNumber string) (signedToken string, signedRefre
 		PhoneNumber: phoneNumber,
 		ID:          ID,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(5)).Unix(),
+			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(24)).Unix(),
 		},
 	}
 

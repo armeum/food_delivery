@@ -19,25 +19,48 @@ import (
 // 	c.JSON(http.StatusOK, gin.H{"data": products})
 // }
 
-func CreateOrder(c *gin.Context) {
-	var order models.Order
-	var user models.User
-	// var cart models.Cart
-	// var product models.Product
-	db := c.MustGet("db").(*gorm.DB)
-	if err := db.Where("id = ?", c.Param("user_id")).Find(&user).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message":    "Route GET:/getCategories not found",
-			"error":      "Record not found",
-			"statusCode": 404,
-		})
-		return
-	}
-	orders := models.Order{UserID: order.UserID}
+func GetCartInfo(c *gin.Context) {
+	// var cartData []models.Item
+	// var totalPrice float64
 
-	db.Create(&order)
-	c.JSON(http.StatusOK, gin.H{"data": orders})
+	//preparing data for json response
+	// returnData := struct {
+	// 	Items []models.Item `json:"items"`
+	// 	Total float64       `json:"total"`
+	// }{
+	// 	Items: cartData,
+	// 	Total: totalPrice,
+	// }
+
+	// 	//encoding data to json
+	// 	rData, err := json.Marshal(returnData)
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	}
+	// 	c.Header().Set("Content-Type", "application/json") //setting content type as application/json
+	// 	c.Write(rData)
+
 }
+
+// func CreateOrder(c *gin.Context) {
+// 	var order models.Order
+// 	var user models.User
+// 	// var cart models.Cart
+// 	// var product models.Product
+// 	db := c.MustGet("db").(*gorm.DB)
+// 	if err := db.Where("id = ?", c.Param("user_id")).Find(&user).Error; err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{
+// 			"message":    "Route GET:/getCategories not found",
+// 			"error":      "Record not found",
+// 			"statusCode": 404,
+// 		})
+// 		return
+// 	}
+// 	// orders := models.Order{: order.UserID}
+
+// 	db.Create(&order)
+// 	c.JSON(http.StatusOK, gin.H{"data": orders})
+// }
 
 func GetCartByUserId(c *gin.Context) {
 	var cart models.Cart
