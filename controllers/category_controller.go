@@ -79,10 +79,12 @@ func GetCategoryById(c *gin.Context) {
 	var categories models.Category
 	db := c.MustGet("db").(*gorm.DB)
 	println(c.Param("id"))
+	limit := 5
 
 	if err := db.
 		Where("id = ?", c.Param("id")).
 		Preload("Product", "category_id = ?", c.Param("id")).
+		Limit(limit).
 		Find(&categories).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/getCategories not found",
