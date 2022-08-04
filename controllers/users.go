@@ -65,11 +65,9 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	
-
 	//Create user
 
-	user := models.User{FirstName: input.FirstName, LastName: input.LastName, PhoneNumber: input.PhoneNumber, Email: input.Email, DateOfBirth: input.DateOfBirth}
+	user := models.User{FirstName: input.FirstName, PhoneNumber: input.PhoneNumber}
 
 	db := c.MustGet("db").(*gorm.DB)
 	db.Create(&user)
@@ -103,10 +101,10 @@ func UpdateUser(c *gin.Context) {
 
 	var updateInput models.User
 	updateInput.FirstName = input.FirstName
-	updateInput.LastName = input.LastName
+	// updateInput.LastName = input.LastName
 	updateInput.PhoneNumber = input.PhoneNumber
-	updateInput.Email = input.Email
-	updateInput.DateOfBirth = input.DateOfBirth
+	// updateInput.Email = input.Email
+	// updateInput.DateOfBirth = input.DateOfBirth
 
 	db.Model(&user).Updates(updateInput)
 
