@@ -27,7 +27,7 @@ func GetAllCategories(c *gin.Context) {
 	// limitInt, _ := strconv.Atoi(limit)
 	// limit stringda keladi buni numberligini check qilib numberga ->
 
-	// limit := 10  Limit(limit).
+	limit := 5
 
 	// if _, err := strconv.Atoi(c.Query("limit")); err != nil {
 	// 	c.JSON(http.StatusBadRequest, gin.H{
@@ -38,7 +38,7 @@ func GetAllCategories(c *gin.Context) {
 	// 	return
 	// }
 
-	if err := db.Preload("Product").Find(&categories).Error; err != nil {
+	if err := db.Preload("Product").Limit(limit).Find(&categories).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/getAllCategories not found",
 			"error":      "Record not found",
@@ -46,7 +46,7 @@ func GetAllCategories(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": categories})
+	c.JSON(http.StatusOK, gin.H{"data": categories}) 
 }
 
 type AddCategoryInput struct {

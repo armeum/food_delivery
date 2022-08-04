@@ -1,9 +1,7 @@
 package controllers
 
 import (
-	"encoding/json"
 	"headfirstgo/food_delivery/models"
-	"io/ioutil"
 	"net/http"
 
 	_ "github.com/lib/pq"
@@ -47,7 +45,7 @@ func FindProductById(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/product/:id not found",
 			"error":      "Record not found",
-			"statusCode": 404,
+			"statusCode": http.StatusBadRequest,
 		})
 		return
 	}
@@ -78,9 +76,9 @@ func AddProduct(c *gin.Context) {
 	var input AddProductInput
 	db := c.MustGet("db").(*gorm.DB)
 	// priceInput := strconv.Itoa(input.Price)
-	file, _ := ioutil.ReadFile("products.json")
-	data := input
-	_ = json.Unmarshal([]byte(file), &data)
+	// file, _ := ioutil.ReadFile("products.json")
+	// data := input
+	// _ = json.Unmarshal([]byte(file), &data)
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -91,7 +89,7 @@ func AddProduct(c *gin.Context) {
 		return
 	}
 	//Create product
-	product := models.Product{Title: input.Title, Description: input.Description, Price: data.Price, Image: input.Image, CategoryID: input.CategoryID}
+	product := models.Product{Title: input.Title, Description: input.Description, Price: input.Price, Image: input.Image, CategoryID: input.CategoryID}
 	db.Create(&product)
 	c.JSON(http.StatusOK, gin.H{"data": product})
 }
