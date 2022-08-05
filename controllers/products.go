@@ -1,8 +1,10 @@
 package controllers
 
 import (
+	"fmt"
 	"headfirstgo/food_delivery/models"
 	"net/http"
+	"strconv"
 
 	_ "github.com/lib/pq"
 
@@ -33,7 +35,17 @@ type UpdateProductInput struct {
 func FindProducts(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var products []models.Product
-	db.Order("category_id ASC").Find(&products)
+	////limit  min 10 max 50
+	limit := "10"
+	limitInt, _ := strconv.Atoi(limit)
+	limit = c.Query("limit")
+
+	if _, err := fmt.Println(limitInt); err != nil {
+		fmt.Println("Invalid limit")
+		return
+	}
+
+	db.Order("category_id ASC").Limit(limitInt).Find(&products)
 
 	c.JSON(http.StatusOK, gin.H{"data": products})
 }
@@ -70,6 +82,21 @@ func FindProductByTitle(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": product})
+}
+
+func FindProductByCategoryId(c *gin.Context) {
+	var products []models.Product
+	db := c.MustGet("db").(*gorm.DB)
+	if err := db.Where("category_id = ?", c.Param("category_id")).Find(&products).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message":    "Route GET:/product/:category_id not found",
+			"error":      err.Error(),
+			"statusCode": 404,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": products})
 }
 
 //////Adding Product
@@ -146,4 +173,18 @@ func DeleteProduct(c *gin.Context) {
 	db.Delete(&product)
 	c.JSON(http.StatusOK, gin.H{"data": product})
 
+}
+
+func GetProduct(c *gin.Context) {
+	var product models.Product
+	db := c.MustGet("db").(*gorm.DB)
+	if err := db.Where("id = ?", c.Param("id")).Select([]string{"ID", "Title", "Description", "Price", "Image"}).First(&product).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message":    "Route GET:/product/:id not found",
+			"error":      "Record not found",
+			"statusCode": http.StatusBadRequest,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": &product})
 }

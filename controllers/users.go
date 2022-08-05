@@ -1,8 +1,10 @@
 package controllers
 
 import (
+	"fmt"
 	"headfirstgo/food_delivery/models"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -31,7 +33,16 @@ type UpdateUserInput struct {
 func FindUsers(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var users []models.User
-	db.Find(&users)
+	////limit  min 10 max 50
+	limit := "10"
+	limitInt, _ := strconv.Atoi(limit)
+	limit = c.Query("limit")
+
+	if _, err := fmt.Println(limitInt); err != nil {
+		fmt.Println("Invalid limit")
+		return
+	}
+	db.Limit(limitInt).Find(&users)
 
 	c.JSON(http.StatusOK, gin.H{"data": users})
 }

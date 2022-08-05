@@ -1,0 +1,6 @@
+ssh:: ssh root@176.57.220.211
+password: 79VV3nbAsY3MYSyg52buYN6yya
+
+token: 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
+
+path: cd /usr/local/go/src/headfirstgo/food_delivery

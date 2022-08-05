@@ -28,10 +28,12 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	//////products routes///////
 	r.GET("/products", controllers.FindProducts)
 	r.GET("/products/:id", controllers.FindProductById)
-	r.GET("/product/:title", controllers.FindProductByTitle)
+	r.GET("/getproduct/:id", controllers.GetProduct)
+	r.GET("/productbycategory/:category_id", controllers.FindProductByCategoryId)
 	r.POST("/product", controllers.AddProduct)
 	r.PATCH("/products/:id", controllers.UpdateProduct)
 	r.DELETE("/products/:id", controllers.DeleteProduct)
+
 
 	///category routes/////////
 	r.POST("/createCategory", controllers.CreateCategory)
@@ -40,7 +42,7 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	r.PATCH("/categories/:id", controllers.UpdateCategory)
 
 	////cart routes/////////
-	// r.GET("/createOrder", controllers.CreateOrder)
-	r.GET("/getCart/:id", controllers.GetCartByUserId)
+	r.POST("/addItem", controllers.AddItemsToBasket)
+	// r.GET("/getCart/:id", controllers.GetCartByUserId)
 	return r
 }

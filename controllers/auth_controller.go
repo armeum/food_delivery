@@ -36,11 +36,11 @@ func Login(c *gin.Context) {
 			"statusCode": 404,
 		})
 		return
-	}  else {
-		c.JSON(http.StatusOK, gin.H{"Password successfully sent to the phone number": user.PhoneNumber}) 
+	} else {
+		c.JSON(http.StatusOK, gin.H{"Password successfully sent to the phone number": user.PhoneNumber})
 	}
 
-	user.Password = RandomPassword()	
+	user.Password = RandomPassword()
 	SmsSender(user.PhoneNumber, user.Password)
 	db.Model(&user).Updates(user)
 }
@@ -48,7 +48,7 @@ func Login(c *gin.Context) {
 func RandomPassword() string {
 	seconds := time.Now().Unix()
 	rand.Seed(seconds)
-	randomNumber := rand.Intn(9999999)
+	randomNumber := rand.Intn(9999-1000) + 1000
 	return strconv.Itoa(randomNumber)
 }
 
@@ -65,7 +65,7 @@ func SmsSender(phone string, password string) {
 	resp, err := http.Post(base_url, "aplication/json", bytes.NewBuffer(json_data))
 	if err != nil {
 		log.Fatal(err, "err")
-	} 
+	}
 	var res map[string]interface{}
 	json.NewDecoder(resp.Body).Decode(&res)
 	fmt.Println(res["json"], "res")
