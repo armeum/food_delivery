@@ -10,9 +10,7 @@ import (
 
 type SignedDetails struct {
 	FirstName   string
-	LastName    string
 	PhoneNumber string
-	Email       string
 	ID          int
 	Uid         string
 	jwt.StandardClaims
@@ -26,7 +24,7 @@ func TokenGenerator(ID int, phoneNumber string) (signedToken string, signedRefre
 		PhoneNumber: phoneNumber,
 		ID:          ID,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(24)).Unix(),
+			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(20000)).Unix(),
 		},
 	}
 

@@ -14,7 +14,7 @@ func Authentication() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message":    "Unauthorized",
 				"error":      "No authorization header provided",
-				"statusCode": 404,
+				"statusCode": http.StatusInternalServerError,
 			})
 			c.Abort()
 			return
