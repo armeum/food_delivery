@@ -8,7 +8,7 @@ import (
 )
 
 //GeneratePaginationFromRequest ..
-func GeneratePaginationFromRequest(c *gin.Context) models.Pagination {
+func GeneratePagination(c *gin.Context) models.Pagination {
 	// Initializing default
 	//	var mode string
 	limit := 2
