@@ -12,6 +12,7 @@ func AddItemsToBasket(c *gin.Context) {
 	var items []models.Item
 	var products []models.Product
 	var basket []models.Basket
+	var total_price int
 
 	db := c.MustGet("db").(*gorm.DB)
 	if err := db.Where("id = ?", c.Param("id")).Find(&products).Error; err != nil {
@@ -23,10 +24,17 @@ func AddItemsToBasket(c *gin.Context) {
 		return
 	}
 
+	for total_price = 0; total_price <= 0; total_price++ {
+		for _, product := range products {
+			total_price += product.Price
+		}
+	}
+
 	for _, product := range products {
 		items = append(items, models.Item{
 			ProductID: product.ID,
 			Quantity:  1,
+			Price: product.Price * Quantity,
 		})
 
 		return

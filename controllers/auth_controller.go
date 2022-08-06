@@ -44,7 +44,7 @@ func Login(c *gin.Context) {
 	SmsSender(user.PhoneNumber, user.Password)
 	db.Model(&user).Updates(user)
 }
-
+/// Generating random four-digit password 
 func RandomPassword() string {
 	seconds := time.Now().Unix()
 	rand.Seed(seconds)

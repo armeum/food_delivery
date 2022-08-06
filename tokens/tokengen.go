@@ -16,7 +16,6 @@ type SignedDetails struct {
 	jwt.StandardClaims
 }
 
-// var db *gorm.DB
 var SECRET_KEY = os.Getenv("SECRET_KEY")
 
 func TokenGenerator(ID int, phoneNumber string) (signedToken string, signedRefreshToken string, err error) {
