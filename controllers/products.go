@@ -1,10 +1,8 @@
 package controllers
 
 import (
-	"fmt"
 	"headfirstgo/food_delivery/models"
 	"net/http"
-	"strconv"
 
 	_ "github.com/lib/pq"
 
@@ -33,20 +31,20 @@ type UpdateProductInput struct {
 
 //////Find All Products
 func FindProducts(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
-	var products []models.Product
-	////limit  min 10 max 50
-	limit := "10"
-	limitInt, _ := strconv.Atoi(limit)
-	limit = c.Query("limit")
 
-	if _, err := fmt.Println(limitInt); err != nil {
-		fmt.Println("Invalid limit")
+	// var pagination *models.Pagination
+	// offset := (pagination.Page - 1) * pagination.Limit
+
+	db := c.MustGet("db").(*gorm.DB)
+	var products models.Product
+	if err := db.Order("category_id ASC").Find(&products).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message":    "Something went wrong",
+			"error":      "Record not found",
+			"statusCode": 404,
+		})
 		return
 	}
-
-	db.Order("category_id ASC").Limit(limitInt).Find(&products)
-
 	c.JSON(http.StatusOK, gin.H{"data": products})
 }
 
@@ -67,23 +65,7 @@ func FindProductById(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": product})
 }
 
-//////////////Find Product By its Title
-func FindProductByTitle(c *gin.Context) {
-	//get model if exists
-	var product models.Product
-	db := c.MustGet("db").(*gorm.DB)
-	if err := db.Where("title = ?", c.Param("title")).Find(&product).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message":    "Route GET:/product/:title not found",
-			"error":      "Record not found",
-			"statusCode": 404,
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"data": product})
-}
-
+///// Find Products By Category Id
 func FindProductByCategoryId(c *gin.Context) {
 	var products []models.Product
 	db := c.MustGet("db").(*gorm.DB)
@@ -173,18 +155,4 @@ func DeleteProduct(c *gin.Context) {
 	db.Delete(&product)
 	c.JSON(http.StatusOK, gin.H{"data": product})
 
-}
-
-func GetProduct(c *gin.Context) {
-	var product models.Product
-	db := c.MustGet("db").(*gorm.DB)
-	if err := db.Where("id = ?", c.Param("id")).Select([]string{"ID", "Title", "Description", "Price", "Image"}).First(&product).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message":    "Route GET:/product/:id not found",
-			"error":      "Record not found",
-			"statusCode": http.StatusBadRequest,
-		})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"data": &product})
 }
