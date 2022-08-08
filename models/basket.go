@@ -6,7 +6,7 @@ type Basket struct {
 	gorm.Model
 	UserID     int    `gorm:"column:user_id;foreignKey:basket_id" json:"user_id"`
 	TotalPrice int    `gorm:"column:price" json:"price"`
-	Item       []Item `gorm:"many2many:basket_item;column:item" json:"item"`
+	Item       []BasketItem `gorm:"many2many:basket_item;column:item" json:"item"`
 
 }
 

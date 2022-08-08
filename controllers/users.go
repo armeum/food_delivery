@@ -32,7 +32,7 @@ func FindUsers(c *gin.Context) {
 
 	db := c.MustGet("db").(*gorm.DB)
 	var users []models.User
-	if err := db.Order("created_at ASC").Find(&users).Error; err != nil {
+	if err := db.Scopes(Paginate(c)).Order("created_at ASC").Find(&users).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Something went wrong",
 			"error":      "Record not found",

@@ -24,7 +24,7 @@ func GetAllCategories(c *gin.Context) {
 	var categories []models.Category
 	db := c.MustGet("db").(*gorm.DB)
 
-	if err := db.Preload("Product").Find(&categories).Error; err != nil {
+	if err := db.Scopes(Paginate(c)).Preload("Product").Find(&categories).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/getAllCategories not found",
 			"error":      "Record not found",

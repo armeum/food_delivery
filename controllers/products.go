@@ -32,12 +32,12 @@ type UpdateProductInput struct {
 //////Find All Products
 func FindProducts(c *gin.Context) {
 
-	// var pagination *models.Pagination
-	// offset := (pagination.Page - 1) * pagination.Limit
+	// var pagination controllers.GeneratePagination(c)
+	// offset := (pagination.Page - 1) * pagination.Limit   .Limit(pagination.Limit).Offset(offset)
 
 	db := c.MustGet("db").(*gorm.DB)
 	var products []models.Product
-	if err := db.Order("category_id ASC").Find(&products).Error; err != nil {
+	if err := db.Scopes(Paginate(c)).Order("category_id ASC").Find(&products).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Something went wrong",
 			"error":      "Record not found",
@@ -61,7 +61,6 @@ func FindProductById(c *gin.Context) {
 		})
 		return
 	}
-
 	c.JSON(http.StatusOK, gin.H{"data": product})
 }
 
@@ -69,7 +68,7 @@ func FindProductById(c *gin.Context) {
 func FindProductByCategoryId(c *gin.Context) {
 	var products []models.Product
 	db := c.MustGet("db").(*gorm.DB)
-	if err := db.Where("category_id = ?", c.Param("category_id")).Find(&products).Error; err != nil {
+	if err := db.Scopes(Paginate(c)).Where("category_id = ?", c.Param("category_id")).Find(&products).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/product/:category_id not found",
 			"error":      err.Error(),

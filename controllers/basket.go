@@ -17,7 +17,7 @@ func AddItemsToBasket(c *gin.Context) {
 	// var items []models.Item
 	var products models.Product
 	var basket models.Basket
-	var items models.Item
+	var items models.BasketItem
 	var total_price int
 
 	db := c.MustGet("db").(*gorm.DB)
@@ -35,7 +35,7 @@ func AddItemsToBasket(c *gin.Context) {
 	}
 
 	///create
-	newBasket := models.Item{ProductID: items.ProductID, Quantity: items.Quantity, Price: total_price}
+	newBasket := models.BasketItem{BasketId: items.BasketId, ProductID: items.ProductID, Quantity: items.Quantity }
 
 
 	c.JSON(http.StatusOK, gin.H{"data": newBasket})
@@ -45,7 +45,7 @@ func DeleteItemFromBasket(c *gin.Context) {
 
 	var basket models.Basket
 	var products models.Product
-	var item models.Item
+	var item models.BasketItem
 	var total_price int
 
 	for total_price = basket.TotalPrice; total_price <= 0; total_price-- {
