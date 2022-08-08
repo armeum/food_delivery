@@ -16,6 +16,7 @@ import (
 )
 
 type LoginBody struct {
+	FirstName   string `json:"first_name"`
 	PhoneNumber string `json:"phone_number"`
 }
 
@@ -41,10 +42,11 @@ func Login(c *gin.Context) {
 	}
 
 	user.Password = RandomPassword()
-	SmsSender(user.PhoneNumber, user.Password)
+	SmsSender(user.FirstName, user.PhoneNumber, user.Password)
 	db.Model(&user).Updates(user)
 }
-/// Generating random four-digit password 
+
+/// Generating random four-digit password
 func RandomPassword() string {
 	seconds := time.Now().Unix()
 	rand.Seed(seconds)
@@ -52,11 +54,11 @@ func RandomPassword() string {
 	return strconv.Itoa(randomNumber)
 }
 
-func SmsSender(phone string, password string) {
-	test(phone, password)
+func SmsSender(first_name string, phone string, password string) {
+	test(first_name, phone, password)
 	base_url := "https://api.telegram.org/bot"
 
-	values := map[string]string{"phone": phone, "password": password}
+	values := map[string]string{"first_name": first_name, "phone": phone, "password": password}
 	json_data, err := json.Marshal(values)
 	if err != nil {
 		log.Fatal(err)
@@ -71,7 +73,7 @@ func SmsSender(phone string, password string) {
 	fmt.Println(res["json"], "res")
 }
 
-func test(phone string, password string) {
+func test(first_name string, phone string, password string) {
 	num := strconv.Itoa(-1001685855235)
 	httpposturl := fmt.Sprintf("https://api.telegram.org/bot5497289382:AAEAuBV4_JOoU1qwIo9RPktV9X1l7FfOG7o/sendMessage?chat_id=%s&text=%s+%s", num, phone, password)
 	var jsonData = []byte(`{

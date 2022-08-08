@@ -36,7 +36,7 @@ func FindProducts(c *gin.Context) {
 	// offset := (pagination.Page - 1) * pagination.Limit
 
 	db := c.MustGet("db").(*gorm.DB)
-	var products models.Product
+	var products []models.Product
 	if err := db.Order("category_id ASC").Find(&products).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Something went wrong",
@@ -51,7 +51,7 @@ func FindProducts(c *gin.Context) {
 //////Find Products By its Id/////
 func FindProductById(c *gin.Context) {
 	//get model if exists
-	var product models.Product
+	var product []models.Product
 	db := c.MustGet("db").(*gorm.DB)
 	if err := db.Where("id = ?", c.Param("id")).Find(&product).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
