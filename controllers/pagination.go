@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"math"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -18,16 +17,14 @@ func Paginate(c *gin.Context) func(db *gorm.DB) *gorm.DB {
 
 		limit, _ := strconv.Atoi(q.Get("limit"))
 		switch {
-		case limit > 100:
+		case limit >= 100:
 			limit = 100
-		case limit <= 0:
-			limit = 10
 		case limit == 1:
 			limit = 1
 		case limit == 2:
 			limit = 2
-		case !math.IsNaN(float64(limit)):
-			limit = 1
+		default:
+			limit = 100
 		}
 		offset := (page - 1) * limit
 		return db.Offset(offset).Limit(limit)

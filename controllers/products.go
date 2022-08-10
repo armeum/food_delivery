@@ -31,7 +31,6 @@ type UpdateProductInput struct {
 
 //////Find All Products
 func FindProducts(c *gin.Context) {
-
 	// var pagination controllers.GeneratePagination(c)
 	// offset := (pagination.Page - 1) * pagination.Limit   .Limit(pagination.Limit).Offset(offset)
 
