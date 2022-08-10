@@ -112,6 +112,7 @@ func AddItemsToBasket(c *gin.Context) {
 		db.Create(&newBasket)
 	}
 
+
 	//* basket itemsda find({user_id c.id, basket_id: bask.ID}))
 	//* basket item bolmasa create, bolsa update
 
@@ -123,7 +124,6 @@ func AddItemsToBasket(c *gin.Context) {
 		})
 		return
 	}
-
 	if err := db.Find(&item).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/getAllCategories not found",
@@ -147,8 +147,8 @@ func AddItemsToBasket(c *gin.Context) {
 
 		db.Model(&item).Updates(updateInput)
 	}
-
 	c.JSON(http.StatusOK, gin.H{"data": item})
+
 }
 
 func DeleteItemFromBasket(c *gin.Context) {
