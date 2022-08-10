@@ -11,12 +11,10 @@ import (
 
 type AddBasketInput struct {
 	gorm.Model
-	BasketId  uint `json:"basket_id"`
-	ProductID uint `json:"productId"`
-	Quantity  int  `gorm:"column:quantity" json:"quantity"`
+	UserId int `json:"user_id" binding:"required"`
+	TotalPrice int `json:"total_price" binding:"required"`
+
 }
-
-
 // func (b *models.Basket) AddNewOrder(arg *models.Item) {
 // 	b.Item = append(b.Item, *arg)
 // }
@@ -80,10 +78,15 @@ func AddItemsToBasket(c *gin.Context) {
 	var user models.User
 	var total_price int
 
+	var  user_id, user_id_exists = c.Get("id")
+		
+	if(!user_id_exists){
+		c.JSON(401, gin.H{"message": "user_id not found"})
+		}
 	// var basket = find({user_id: c.id})
 
 	db := c.MustGet("db").(*gorm.DB)
-	if err := db.Where((c.Get("id"))).Find(&basket).Error; err != nil {
+	if err := db.Where("user_id = ?", user_id).Find(&basket).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/getAllCategories not found",
 			"error":      "Record not found",
@@ -97,13 +100,14 @@ func AddItemsToBasket(c *gin.Context) {
 		for _, item := range basket.Item {
 			total_price += item.Quantity *products.Price
 		}
-		db.Create(&basket)
+		newBasket := models.Basket{UserID: basket.UserID, TotalPrice: total_price}
+		db.Create(&newBasket)
 	  }
 	  
 	//* basket itemsda find({user_id c.id, basket_id: bask.ID}))
 	//* basket item bolmasa create, bolsa update
 
-	if err := db.Where("basket_id = ?", c.Param("basket_id")).Where(c.Get("id")).Find(&item).Error; err != nil {
+	if err := db.Where("basket_id = ?", c.Param("basket_id")).Find(&item).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/basketitems not found",
 			"error":      "Record not found",
@@ -111,7 +115,6 @@ func AddItemsToBasket(c *gin.Context) {
 		})
 		return
 	}
-
 	
 	if err := db.Find(&item).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -121,10 +124,7 @@ func AddItemsToBasket(c *gin.Context) {
 		})
 		return
 	}
-	var  user_id, user_id_exists = c.Get("id")
-	if(!user_id_exists){
-	c.JSON(401, gin.H{"message": "user_id not found"})
-	}
+
 
 	fmt.Println(user_id)
 	fmt.Println(c.Get("phone_number"))
