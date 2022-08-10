@@ -10,7 +10,7 @@ import (
 
 func Translation(c *gin.Context) {
 
-	locale := c.Request.URL.Query().Get(":locale")
+	locale := c.Query(":locale")
 
 	var lang language.Tag
 

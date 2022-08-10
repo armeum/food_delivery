@@ -16,7 +16,7 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 		ctx.Set("db", db)
 	})
 
-	r.Use(cors.Default())
+	r.Use(cors.AllowAll())
 	/////translation
 	// r.GET("/:locale", controllers.Translation)
 
