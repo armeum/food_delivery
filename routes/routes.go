@@ -23,18 +23,9 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	/////auth routes/////////
 	r.POST("/auth/login", controllers.Login)
 	r.POST("/auth/verify", controllers.Verification)
-
-
-	//////products routes///////
-	r.GET("/products", controllers.FindProducts)
-	r.GET("/products/:id", controllers.FindProductById)
-	r.GET("/productbycategory/:category_id", controllers.FindProductByCategoryId)
-	r.POST("/product", controllers.AddProduct)
-	r.PATCH("/products/:id", controllers.UpdateProduct)
-	r.DELETE("/products/:id", controllers.DeleteProduct)
 	// r.Use(middleware.Authentication())
 	//////////users routes///////////
-
+	
 	r.Use(middleware.Authentication())
 
 	r.GET("/users", controllers.FindUsers)
@@ -43,7 +34,13 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	r.PATCH("/:users/:id", controllers.UpdateUser)
 	r.DELETE("/:users/:id", controllers.DeleteUser)
 
-
+	//////products routes///////
+	r.GET("/products", controllers.FindProducts)
+	r.GET("/products/:id", controllers.FindProductById)
+	r.GET("/productbycategory/:category_id", controllers.FindProductByCategoryId)
+	r.POST("/product", controllers.AddProduct)
+	r.PATCH("/products/:id", controllers.UpdateProduct)
+	r.DELETE("/products/:id", controllers.DeleteProduct)
 
 	///category routes/////////
 	r.POST("/createCategory", controllers.CreateCategory)

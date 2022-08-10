@@ -13,7 +13,12 @@ type AddBasketInput struct {
 	gorm.Model
 	UserId int `json:"user_id" binding:"required"`
 	TotalPrice int `json:"total_price" binding:"required"`
+}
 
+type UpdateBasketInput struct {
+	gorm.Model
+	UserId int `json:"user_id" binding:"required"`
+	TotalPrice int `json:"total_price" binding:"required"`
 }
 // func (b *models.Basket) AddNewOrder(arg *models.Item) {
 // 	b.Item = append(b.Item, *arg)
@@ -76,7 +81,12 @@ func AddItemsToBasket(c *gin.Context) {
 	var basket models.Basket
 	var item models.BasketItem
 	var user models.User
+	var updateBasket UpdateBasketInput
 	var total_price int
+
+		
+	var items models.Product
+	basket.TotalPrice = products.Price * item.Quantity
 
 	var  user_id, user_id_exists = c.Get("id")
 		
@@ -125,7 +135,6 @@ func AddItemsToBasket(c *gin.Context) {
 		return
 	}
 
-
 	fmt.Println(user_id)
 	fmt.Println(c.Get("phone_number"))
 	fmt.Println(c.Get("id"))
@@ -133,13 +142,15 @@ func AddItemsToBasket(c *gin.Context) {
 	//* basket bolsa tepadagi itemlarni put qilasz
 	//basket update qilasz, total price
 
-	var items models.Product
-	basket.TotalPrice = products.Price * item.Quantity
-
-	///create
+	var updateInput models.Basket
+	if user.Basket != nil {
+		updateInput.UserID = updateBasket.UserId
+		updateInput.TotalPrice = total_price		 		
+	}
+	
 	c.JSON(http.StatusOK, gin.H{"data": items})
-}
 
+}
 
 func DeleteItemFromBasket(c *gin.Context) {
 

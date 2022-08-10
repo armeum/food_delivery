@@ -21,6 +21,8 @@ func Paginate(c *gin.Context) func(db *gorm.DB) *gorm.DB {
 			limit = 100
 		case limit <= 0:
 			limit = 10
+		default: 
+			limit = 100
 		}
 		offset := (page - 1) * limit
 		return db.Offset(offset).Limit(limit)
