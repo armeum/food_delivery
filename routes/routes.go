@@ -4,6 +4,8 @@ import (
 	"food_delivery/middleware"
 	"headfirstgo/food_delivery/controllers"
 
+	cors "github.com/rs/cors/wrapper/gin"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
@@ -14,12 +16,18 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 		ctx.Set("db", db)
 	})
 
+	r.Use(cors.Default())
+	/////translation
+	// r.GET("/:locale", controllers.Translation)
+
 	/////auth routes/////////
 	r.POST("/auth/login", controllers.Login)
 	r.POST("/auth/verify", controllers.Verification)
 	// r.Use(middleware.Authentication())
 	//////////users routes///////////
-	r.GET("/users", middleware.Authentication(), controllers.FindUsers)
+	r.Use(middleware.Authentication())
+
+	r.GET("/users", controllers.FindUsers)
 	r.GET("/users/:id", controllers.FindUser)
 	r.POST("/user", controllers.CreateUser)
 	r.PATCH("/:users/:id", controllers.UpdateUser)
@@ -33,7 +41,6 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	r.PATCH("/products/:id", controllers.UpdateProduct)
 	r.DELETE("/products/:id", controllers.DeleteProduct)
 
-
 	///category routes/////////
 	r.POST("/createCategory", controllers.CreateCategory)
 	r.GET("/getAllCategories", controllers.GetAllCategories)
@@ -42,7 +49,9 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	r.DELETE("/category/:id", controllers.DeleteCategory)
 
 	////cart routes/////////
-	r.POST("/addItem", controllers.AddItemsToBasket)
-	// r.GET("/getCart/:id", controllers.GetCartByUserId)
+	// r.GET("/getBasket", controllers.GetBasket)
+	// r.POST("/addBasket", controllers.AddNewBasket)
+	r.PUT("/addToBasket", controllers.AddItemsToBasket)
+
 	return r
 }

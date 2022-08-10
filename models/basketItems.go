@@ -1,17 +1,20 @@
 package models
 
-import "time"
+import "github.com/jinzhu/gorm"
 
 type BasketItem struct {
-	ID        uint `gorm:"primary_key"`
-	CreatedAt time.Time
-	BasketId  string  `gorm:"many2one;foreignkey:id" json:"basket_id"`
-	ProductID uint    `gorm:"many2many:item_productId;column:productId;foreignkey:id" json:"productId"`
-	Product   Product `gorm:"many2many:item_productId;column:productId" json:"product"`
-	// Price     int     `gorm:"column:price" json:"price"`
+	gorm.Model
+	BasketId  uint `json:"basket_id"`
+	ProductID uint   `json:"productId"`
 	Quantity int `gorm:"column:quantity" json:"quantity"`
+
+	// Product   Product `gorm:"many2many:item_productId;column:productId" json:"product"`
+	// Price     int     `gorm:"column:price" json:"price"`
 }
 
 func (items *BasketItem) TableName() string {
 	return "items"
 }
+
+// gorm:"many2one;foreignkey:id" basketID
+// gorm:"many2many:item_productId;column:productId;foreignkey:id" ProductId

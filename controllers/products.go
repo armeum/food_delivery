@@ -37,7 +37,7 @@ func FindProducts(c *gin.Context) {
 
 	db := c.MustGet("db").(*gorm.DB)
 	var products []models.Product
-	if err := db.Scopes(Paginate(c)).Order("category_id ASC").Find(&products).Error; err != nil {
+	if err := db.Scopes(Paginate(c)).Order("id ASC").Find(&products).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Something went wrong",
 			"error":      "Record not found",
@@ -98,6 +98,8 @@ func AddProduct(c *gin.Context) {
 		})
 		return
 	}
+	
+
 	//Create product
 	product := models.Product{Title: input.Title, Description: input.Description, Price: input.Price, Image: input.Image, CategoryID: input.CategoryID, CategoryName: input.CategoryName}
 	db.Create(&product)

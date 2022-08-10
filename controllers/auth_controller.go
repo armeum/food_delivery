@@ -17,7 +17,7 @@ import (
 
 type LoginBody struct {
 	FirstName   string `json:"first_name"`
-	PhoneNumber string `json:"phone_number"`
+	PhoneNumber string `gorm:"typevarchar(5);unique_index" json:"phone_number"`
 }
 
 func Login(c *gin.Context) {
