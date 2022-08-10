@@ -50,7 +50,7 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	r.DELETE("/category/:id", controllers.DeleteCategory)
 
 	////cart routes/////////
-	// r.GET("/getBasket", controllers.GetBasket)
+	r.GET("/getBasket", controllers.GetBasket)
 	// r.POST("/addBasket", controllers.AddNewBasket)
 	r.PUT("/addToBasket", controllers.AddItemsToBasket)
 

@@ -142,12 +142,13 @@ func AddItemsToBasket(c *gin.Context) {
 	//* basket bolsa tepadagi itemlarni put qilasz
 	//basket update qilasz, total price
 
-	var updateInput models.Basket
 	if user.Basket != nil {
+		var updateInput models.Basket
 		updateInput.UserID = updateBasket.UserId
-		updateInput.TotalPrice = total_price		 		
+		updateInput.TotalPrice = total_price	
+
 	}
-	
+
 	c.JSON(http.StatusOK, gin.H{"data": items})
 
 }
