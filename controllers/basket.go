@@ -11,15 +11,16 @@ import (
 
 type AddBasketInput struct {
 	gorm.Model
-	UserId int `json:"user_id" binding:"required"`
+	UserId     int `json:"user_id" binding:"required"`
 	TotalPrice int `json:"total_price" binding:"required"`
 }
 
 type UpdateBasketInput struct {
 	gorm.Model
-	UserId int `json:"user_id" binding:"required"`
+	UserId     int `json:"user_id" binding:"required"`
 	TotalPrice int `json:"total_price" binding:"required"`
 }
+
 // func (b *models.Basket) AddNewOrder(arg *models.Item) {
 // 	b.Item = append(b.Item, *arg)
 // }
@@ -32,7 +33,6 @@ type UpdateBasketInput struct {
 // 	})
 // 	return
 // }
-
 
 func GetBasket(c *gin.Context) {
 
@@ -50,7 +50,7 @@ func GetBasket(c *gin.Context) {
 		return
 	}
 	for _, item := range basket.Item {
-		total_price += item.Quantity *products.Price
+		total_price += item.Quantity * products.Price
 	}
 	c.JSON(http.StatusOK, gin.H{"data": basket, "total_price": total_price})
 }
@@ -84,15 +84,13 @@ func AddItemsToBasket(c *gin.Context) {
 	var updateBasket UpdateBasketInput
 	var total_price int
 
-		
-	var items models.Product
 	basket.TotalPrice = products.Price * item.Quantity
 
-	var  user_id, user_id_exists = c.Get("id")
-		
-	if(!user_id_exists){
+	var user_id, user_id_exists = c.Get("id")
+
+	if !user_id_exists {
 		c.JSON(401, gin.H{"message": "user_id not found"})
-		}
+	}
 	// var basket = find({user_id: c.id})
 
 	db := c.MustGet("db").(*gorm.DB)
@@ -108,12 +106,12 @@ func AddItemsToBasket(c *gin.Context) {
 
 	if user.Basket == nil {
 		for _, item := range basket.Item {
-			total_price += item.Quantity *products.Price
+			total_price += item.Quantity * products.Price
 		}
 		newBasket := models.Basket{UserID: basket.UserID, TotalPrice: total_price}
 		db.Create(&newBasket)
-	  }
-	  
+	}
+
 	//* basket itemsda find({user_id c.id, basket_id: bask.ID}))
 	//* basket item bolmasa create, bolsa update
 
@@ -125,7 +123,7 @@ func AddItemsToBasket(c *gin.Context) {
 		})
 		return
 	}
-	
+
 	if err := db.Find(&item).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/getAllCategories not found",
@@ -139,18 +137,18 @@ func AddItemsToBasket(c *gin.Context) {
 	fmt.Println(c.Get("phone_number"))
 	fmt.Println(c.Get("id"))
 
-	//* basket bolsa tepadagi itemlarni put qilasz
-	//basket update qilasz, total price
+	//if there is a basket put items
+	//update basket and total price
 
 	if user.Basket != nil {
 		var updateInput models.Basket
 		updateInput.UserID = updateBasket.UserId
-		updateInput.TotalPrice = total_price	
+		updateInput.TotalPrice = total_price
 
+		db.Model(&item).Updates(updateInput)
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": items})
-
+	c.JSON(http.StatusOK, gin.H{"data": item})
 }
 
 func DeleteItemFromBasket(c *gin.Context) {
