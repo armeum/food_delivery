@@ -105,14 +105,14 @@ func UpdateBasket(c *gin.Context) {
 
 		return
 	}
-	if basket.UserID != user_id {
-		c.JSON(http.StatusForbidden, gin.H{
-			"message":    "Route GET:/getAllCategories not found",
-			"error":      "Record not found",
-			"statusCode": http.StatusForbidden,
-		})
-		return
-	}
+	// if basket.UserID != user_id {
+	// 	c.JSON(http.StatusForbidden, gin.H{
+	// 		"message":    "Route GET:/getAllCategories not found",
+	// 		"error":      "Record not found",
+	// 		"statusCode": http.StatusForbidden,
+	// 	})
+	// 	return
+	// }
 
 	fmt.Println(paramInt)
 	if err := db.Where("basket_id = ?", basket.ID).Find(&basketItems).Error; err != nil {
