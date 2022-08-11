@@ -105,9 +105,6 @@ func UpdateBasket(c *gin.Context) {
 
 		return
 	}
-
-
-	
 	if basket.UserID != user_id {
 		c.JSON(http.StatusForbidden, gin.H{
 			"message":    "Route GET:/getAllCategories not found",
