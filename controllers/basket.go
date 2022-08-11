@@ -107,7 +107,9 @@ func UpdateBasket(c *gin.Context) {
 	var user models.User
 	var total_price int
 
+	
 	var user_id, user_id_exists = c.Get("id")
+	// user_idInt := int(user_id)
 	////checking if user_id exists
 	if !user_id_exists {
 		c.JSON(401, gin.H{"message": "user_id not found"})
@@ -125,6 +127,7 @@ func UpdateBasket(c *gin.Context) {
 	}
 
 	paramInt, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	fmt.Println(paramInt)
 
 	if basket.ID != uint(paramInt) {
 		c.JSON(http.StatusForbidden, gin.H{
@@ -140,8 +143,8 @@ func UpdateBasket(c *gin.Context) {
 	////if there is no basket then create one and give totalprice
 	if user.Basket == nil {
 		total_price += products.Price
-		newBasket := models.Basket{UserID: basket.UserID, TotalPrice: 0}
-		db.Create(&newBasket)
+		// newBasket := models.Basket{UserID: int(user_id), TotalPrice: 0}
+		// db.Create(&newBasket)
 	}
 	/////find basket items by basket_id
 	if err := db.Where("basket_id = ?", c.Param("basket_id")).Find(&item).Error; err != nil {
@@ -153,10 +156,19 @@ func UpdateBasket(c *gin.Context) {
 		return
 	}
 
+	if err := db.Find(&item).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message":    "Route PUT:/basketItems not found",
+			"error":      "Record not found",
+			"statusCode": 404,
+		})
+		return
+	}
+
 	if user.Basket == nil {
 		var basket []models.BasketItem
 		basket = append(basket, models.BasketItem{
-			// BasketID: user.ID,
+			BasketID: user.ID,
 			Quantity: 1,
 		})
 	}
@@ -170,12 +182,42 @@ func UpdateBasket(c *gin.Context) {
 
 	if user.Basket != nil {
 		var updateInput []models.BasketItem
-
 		// updateInput.BasketID = basket.ID
 		db.Model(&item).Updates(updateInput)
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": item})
+}
+
+
+func GetBasketById(c *gin.Context) {
+	var basket []models.Basket
+	db := c.MustGet("db").(*gorm.DB)
+	if err := db.Where("id = ?", c.Param("id")).Find(&basket).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message":    "Route GET:/product/:id not found",
+			"error":      "Record not found",
+			"statusCode": http.StatusBadRequest,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": basket})
+}
+
+func DeleteBasket(c *gin.Context){
+	db := c.MustGet("db").(*gorm.DB)
+	///get model if exists
+	var basket models.Basket
+	if err := db.Where("id = ?", c.Param("id")).Find(&basket).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message":    "Route GET:/products/:id not found",
+			"error":      err.Error(),
+			"statusCode": 404,
+		})
+		return
+	}
+	db.Delete(&basket)
+	c.JSON(http.StatusOK, gin.H{"data": basket})
 }
 
 func DeleteItemFromBasket(c *gin.Context) {

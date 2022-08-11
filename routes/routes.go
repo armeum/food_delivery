@@ -15,7 +15,7 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	})
 
 	// r.Use(cors.AllowAll())
-	r.Use(middleware.CustomHeaderAPI)
+	// r.Use(middleware.CustomHeaderAPI)
 	/////translation
 	// r.GET("/:locale", controllers.Translation)
 
@@ -50,6 +50,8 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 
 	////cart routes/////////
 	r.GET("/basket", controllers.GetBasket)
+	r.GET("/basket/:id", controllers.GetBasketById)
+	r.DELETE("/basket/:id", controllers.DeleteBasket)
 	// r.POST("/basket", controllers.AddItem)
 	r.PUT("/basket/:id", controllers.UpdateBasket)
 
