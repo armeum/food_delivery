@@ -14,7 +14,7 @@ type AddProductInput struct {
 	gorm.Model
 	Title        string `gorm:"column:title" json:"title"`
 	Description  string `gorm:"column:description" json:"description"`
-	Price        int    `gorm:"column:price"`
+	Price        uint    `gorm:"column:price"`
 	Image        string `gorm:"column:image" json:"image"`
 	CategoryID   int    `gorm:"column:category_id;foreignkey:product_id" json:"category_id"`
 	CategoryName string `gorm:"column:category_name" json:"category_name"`
@@ -23,7 +23,7 @@ type UpdateProductInput struct {
 	gorm.Model
 	Title        string `gorm:"column:title" json:"title"`
 	Description  string `gorm:"column:description" json:"description"`
-	Price        int    `gorm:"column:price" json:"price"`
+	Price        uint    `gorm:"column:price" json:"price"`
 	Image        string `gorm:"column:image" json:"image"`
 	CategoryID   int    `gorm:"column:category_id;foreignkey:product_id" json:"category_id"`
 	CategoryName string `gorm:"column:category_name" json:"category_name"`
@@ -102,7 +102,7 @@ func AddProduct(c *gin.Context) {
 
 ///Updating Product
 func UpdateProduct(c *gin.Context) {
-	var input UpdateProductInput
+	var input 	UpdateProductInput
 	//Validate input
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -132,6 +132,21 @@ func UpdateProduct(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": product})
 
+}
+
+func GetProductsExeptPizza(c *gin.Context){
+	var products []models.Product
+	db := c.MustGet("db").(*gorm.DB)
+	if err := db.Scopes(Paginate(c)).Where("category_id != ?", 1).Find(&products).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message":    "Route GET:/product/:category_id not found",
+			"error":      err.Error(),
+			"statusCode": 404,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": products})
+	
 }
 
 /////Deleting Products
