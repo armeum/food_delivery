@@ -4,11 +4,11 @@ import "github.com/jinzhu/gorm"
 
 type BasketItem struct {
 	gorm.Model
-	BasketId  uint `json:"basket_id"`
-	ProductID uint   `json:"productId"`
-	Quantity int `gorm:"column:quantity" json:"quantity"`
+	BasketID  uint `json:"basket_id"`
+	ProductID uint   `json:"product_id"`
+	Quantity uint `gorm:"column:quantity" json:"quantity"`
 
-	// Product   Product `gorm:"many2many:item_productId;column:productId" json:"product"`
+	Product   Product `gorm:"column:product_id;foreignkey:id" json:"products"`
 	// Price     int     `gorm:"column:price" json:"price"`
 }
 

@@ -21,79 +21,95 @@ type UpdateBasketInput struct {
 	TotalPrice int `json:"total_price" binding:"required"`
 }
 
-// func (b *models.Basket) AddNewOrder(arg *models.Item) {
-// 	b.Item = append(b.Item, *arg)
-// }
-
-// if err := db.Model(&models.Basket{}).Preload("Item").Find(&basket).Error; err != nil {
-// 	c.JSON(http.StatusBadRequest, gin.H{
-// 		"message":    "Route GET:/getAllCategories not found",
-// 		"error":      "Record not found",
-// 		"statusCode": 404,
-// 	})
-// 	return
-// }
-
 func GetBasket(c *gin.Context) {
-
 	var basket models.Basket
-	var products models.Product
-	// var item models.BasketItem
-	var total_price int
+	var user_id = c.GetInt("id")
+	////checking if user_id exists
+	// if !user_id_exists {
+	// 	c.JSON(401, gin.H{"message": "user_id not found"})
+	// }
+	fmt.Println(user_id)
 	db := c.MustGet("db").(*gorm.DB)
-	if err := db.Preload("Item").Find(&basket).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+	if err := db.Where("user_id = ?", user_id).Preload("Item").Find(&basket).Error; err != nil {
+		newBasket := models.Basket{UserID: user_id, TotalPrice: 0}
+		db.Create(&newBasket)
+		newBasket.Item = []models.BasketItem{}
+		c.JSON(http.StatusOK, gin.H{
 			"message":    "Route GET:/getAllCategories not found",
+			"error":      "Record not found",
+			"statusCode": 200,
+			"data":       newBasket,
+		})
+		return
+		// c.JSON(http.StatusBadRequest, gin.H{
+		// 	"message":    "Route GET:/getAllCategories not found",
+		// 	"error":      "Record not found",
+		// 	"statusCode": 404,
+		// })
+		// return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": basket})
+}
+
+func AddNewBasket(c *gin.Context) {
+	//validate input
+	// db := c.MustGet("db").(*gorm.DB)
+	// var input AddBasketInput
+	// var items models.BasketItem
+	// if err := c.ShouldBindJSON(&input); err != nil {
+	// 	c.JSON(http.StatusBadRequest, gin.H{
+	// 		"message":    "Route POST:/createCategory not found",
+	// 		"error":      err.Error(),
+	// 		"statusCode": 404,
+	// 	})
+	// 	return
+	// }
+	// //Create basket
+	// newBasket := models.BasketItem{BasketId: items.BasketId, Quantity: items.Quantity}
+
+	// db.Create(&newBasket)
+	// c.JSON(http.StatusOK, gin.H{"data": newBasket})
+}
+
+func AddItem(c *gin.Context){
+	var basket_item models.BasketItem
+	var input AddBasketInput
+	db := c.MustGet("db").(*gorm.DB)
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message":    "Route PUT:/basket not found",
 			"error":      "Record not found",
 			"statusCode": 404,
 		})
 		return
 	}
-	for _, item := range basket.Item {
-		total_price += item.Quantity * products.Price
-	}
-	c.JSON(http.StatusOK, gin.H{"data": basket, "total_price": total_price})
-}
 
-//Creating a category
-func AddNewBasket(c *gin.Context) {
-	//validate input
-	db := c.MustGet("db").(*gorm.DB)
-	var input AddBasketInput
-	var items models.BasketItem
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message":    "Route POST:/createCategory not found",
-			"error":      err.Error(),
-			"statusCode": 404,
-		})
-		return
-	}
-	//Create basket
-	newBasket := models.BasketItem{BasketId: items.BasketId, Quantity: items.Quantity}
+	//Create product
+	basketItem := models.BasketItem{BasketID: basket_item.BasketID, ProductID: basket_item.ProductID, Quantity: basket_item.Quantity}
+	db.Create(&basketItem)
+	c.JSON(http.StatusOK, gin.H{"data": basketItem})
 
-	db.Create(&newBasket)
-	c.JSON(http.StatusOK, gin.H{"data": newBasket})
+
 }
 
 func AddItemsToBasket(c *gin.Context) {
+
 	var products models.Product
 	var basket models.Basket
-	var item models.BasketItem
+	var item []models.BasketItem
 	var user models.User
 	var updateBasket UpdateBasketInput
 	var total_price int
 
-	basket.TotalPrice = products.Price * item.Quantity
-
 	var user_id, user_id_exists = c.Get("id")
-
+	////checking if user_id exists
 	if !user_id_exists {
 		c.JSON(401, gin.H{"message": "user_id not found"})
 	}
 	// var basket = find({user_id: c.id})
-
 	db := c.MustGet("db").(*gorm.DB)
+	//// find basket by user_id_exists
 	if err := db.Where("user_id = ?", user_id).Find(&basket).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/getAllCategories not found",
@@ -102,20 +118,14 @@ func AddItemsToBasket(c *gin.Context) {
 		})
 		return
 	}
-	// basket bolmasa create qilasz total hisoblab create qilasz
 
+	////if there is no basket then create one and give totalprice
 	if user.Basket == nil {
-		for _, item := range basket.Item {
-			total_price += item.Quantity * products.Price
-		}
+		total_price += products.Price
 		newBasket := models.Basket{UserID: basket.UserID, TotalPrice: total_price}
 		db.Create(&newBasket)
 	}
-
-
-	//* basket itemsda find({user_id c.id, basket_id: bask.ID}))
-	//* basket item bolmasa create, bolsa update
-
+	/////find basket items by basket_id
 	if err := db.Where("basket_id = ?", c.Param("basket_id")).Find(&item).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/basketitems not found",
@@ -124,19 +134,19 @@ func AddItemsToBasket(c *gin.Context) {
 		})
 		return
 	}
-	if err := db.Find(&item).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message":    "Route GET:/getAllCategories not found",
-			"error":      "Record not found",
-			"statusCode": 404,
+
+	if user.Basket == nil {
+		var basket []models.BasketItem
+		basket = append(basket, models.BasketItem{
+			// BasketId: user.ID,
+			Quantity: 1,
 		})
-		return
 	}
 
 	fmt.Println(user_id)
 	fmt.Println(c.Get("phone_number"))
 	fmt.Println(c.Get("id"))
-
+	// item = append(item, models.BasketItem{})
 	//if there is a basket put items
 	//update basket and total price
 
@@ -144,11 +154,10 @@ func AddItemsToBasket(c *gin.Context) {
 		var updateInput models.Basket
 		updateInput.UserID = updateBasket.UserId
 		updateInput.TotalPrice = total_price
-
 		db.Model(&item).Updates(updateInput)
 	}
-	c.JSON(http.StatusOK, gin.H{"data": item})
 
+	c.JSON(http.StatusOK, gin.H{"data": item})
 }
 
 func DeleteItemFromBasket(c *gin.Context) {

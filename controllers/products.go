@@ -83,10 +83,6 @@ func AddProduct(c *gin.Context) {
 	//validate input
 	var input AddProductInput
 	db := c.MustGet("db").(*gorm.DB)
-	// priceInput := strconv.Itoa(input.Price)
-	// file, _ := ioutil.ReadFile("products.json")
-	// data := input
-	// _ = json.Unmarshal([]byte(file), &data)
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
