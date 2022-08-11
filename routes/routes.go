@@ -16,7 +16,7 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 		ctx.Set("db", db)
 	})
 
-	r.Use(cors.AllowAll())
+	r.Use(cors.Default())
 	/////translation
 	// r.GET("/:locale", controllers.Translation)
 
@@ -43,16 +43,16 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	r.DELETE("/products/:id", controllers.DeleteProduct)
 
 	///category routes/////////
-	r.POST("/createCategory", controllers.CreateCategory)
-	r.GET("/getAllCategories", controllers.GetAllCategories)
-	r.GET("/categories/:id", controllers.GetCategoryById)
-	r.PATCH("/categories/:id", controllers.UpdateCategory)
+	r.POST("/category", controllers.CreateCategory)
+	r.GET("/categories", controllers.GetAllCategories)
+	r.GET("/category/:id", controllers.GetCategoryById)
+	r.PATCH("/category/:id", controllers.UpdateCategory)
 	r.DELETE("/category/:id", controllers.DeleteCategory)
 
 	////cart routes/////////
-	r.GET("/getBasket", controllers.GetBasket)
-	// r.POST("/addBasket", controllers.AddNewBasket)
-	r.PUT("/addToBasket", controllers.AddItemsToBasket)
+	r.GET("/basket", controllers.GetBasket)
+	r.POST("/basket", controllers.AddItem)
+	r.PUT("/basket", controllers.AddItemsToBasket)
 
 	return r
 }
