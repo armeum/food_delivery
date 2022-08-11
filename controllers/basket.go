@@ -102,17 +102,18 @@ func UpdateBasket(c *gin.Context) {
 			"error":      "Record not found",
 			"statusCode": 404,
 		})
+
 		return
 	}
 
-	// if basket.UserID != user_id {
-	// 	c.JSON(http.StatusForbidden, gin.H{
-	// 		"message":    "Route GET:/getAllCategories not found",
-	// 		"error":      "Record not found",
-	// 		"statusCode": http.StatusForbidden,
-	// 	})
-	// 	return
-	// }
+	if basket.UserID != user_id {
+		c.JSON(http.StatusForbidden, gin.H{
+			"message":    "Route GET:/getAllCategories not found",
+			"error":      "Record not found",
+			"statusCode": http.StatusForbidden,
+		})
+		return
+	}
 
 	fmt.Println(paramInt)
 	if err := db.Where("basket_id = ?", basket.ID).Find(&basketItems).Error; err != nil {
@@ -142,13 +143,12 @@ func UpdateBasket(c *gin.Context) {
 		res = append(res, aa[item.ID])
 	}
 
-	
 	db.Model(&basketItems).Updates(res)
 	fmt.Println(user_id)
 	fmt.Println(c.Get("phone_number"))
 	fmt.Println(c.Get("id"))
 
-	c.JSON(http.StatusOK, gin.H{"data": res})
+	c.JSON(http.StatusOK, gin.H{"data": basketItems})
 }
 
 func GetBasketById(c *gin.Context) {
@@ -163,7 +163,7 @@ func GetBasketById(c *gin.Context) {
 		db.Create(&newBasket)
 		newBasket.Item = []models.BasketItem{}
 		c.JSON(http.StatusOK, gin.H{
-			"message":    "",
+			"message":    "Created a new basket",
 			"error":      "",
 			"statusCode": 200,
 			"data":       newBasket,
