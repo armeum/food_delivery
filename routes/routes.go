@@ -24,15 +24,6 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	r.POST("/auth/login", controllers.Login)
 	r.POST("/auth/verify", controllers.Verification)
 	// r.Use(middleware.Authentication())
-	//////////users routes///////////
-
-	r.Use(middleware.Authentication())
-
-	r.GET("/users", controllers.FindUsers)
-	r.GET("/users/:id", controllers.FindUser)
-	r.POST("/user", controllers.CreateUser)
-	r.PATCH("/:users/:id", controllers.UpdateUser)
-	r.DELETE("/:users/:id", controllers.DeleteUser)
 
 	//////products routes///////
 	r.GET("/products", controllers.FindProducts)
@@ -55,6 +46,16 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	r.DELETE("/basket/:id", controllers.DeleteBasket)
 	// r.POST("/basket", controllers.AddItem)
 	r.PUT("/basket/:id", controllers.UpdateBasket)
+
+	//////////users routes///////////
+
+	r.Use(middleware.Authentication())
+
+	r.GET("/users", controllers.FindUsers)
+	r.GET("/users/:id", controllers.FindUser)
+	r.POST("/user", controllers.CreateUser)
+	r.PATCH("/:users/:id", controllers.UpdateUser)
+	r.DELETE("/:users/:id", controllers.DeleteUser)
 
 	return r
 }
