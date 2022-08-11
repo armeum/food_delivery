@@ -11,14 +11,20 @@ import (
 
 type AddBasketInput struct {
 	gorm.Model
-	UserId     int `json:"user_id" binding:"required"`
-	TotalPrice int `json:"total_price" binding:"required"`
+	UserId     uint `json:"user_id" binding:"required"`
+	TotalPrice int  `json:"total_price" binding:"required"`
 }
 
 type UpdateBasketInput struct {
 	gorm.Model
-	UserId     int `json:"user_id" binding:"required"`
-	TotalPrice int `json:"total_price" binding:"required"`
+	UserId     uint `json:"user_id" binding:"required"`
+	TotalPrice int  `json:"total_price" binding:"required"`
+}
+
+type UpdateBasketItemInput struct {
+	gorm.Model
+	BasketID  uint `json:"basket_id"`
+	ProductID uint `json:"product_id"`
 }
 
 func GetBasket(c *gin.Context) {
@@ -71,7 +77,7 @@ func AddNewBasket(c *gin.Context) {
 	// c.JSON(http.StatusOK, gin.H{"data": newBasket})
 }
 
-func AddItem(c *gin.Context){
+func AddItem(c *gin.Context) {
 	var basket_item models.BasketItem
 	var input AddBasketInput
 	db := c.MustGet("db").(*gorm.DB)
@@ -90,16 +96,14 @@ func AddItem(c *gin.Context){
 	db.Create(&basketItem)
 	c.JSON(http.StatusOK, gin.H{"data": basketItem})
 
-
 }
 
-func AddItemsToBasket(c *gin.Context) {
+func UpdateBasket(c *gin.Context) {
 
 	var products models.Product
 	var basket models.Basket
 	var item []models.BasketItem
 	var user models.User
-	var updateBasket UpdateBasketInput
 	var total_price int
 
 	var user_id, user_id_exists = c.Get("id")
@@ -119,10 +123,21 @@ func AddItemsToBasket(c *gin.Context) {
 		return
 	}
 
+	// if basket.ID != strconv.ParseUint(c.Param("id")) {
+	// 	c.JSON(http.StatusForbidden, gin.H{
+	// 		"message":    "Route GET:/getAllCategories not found",
+	// 		"error":      "Record not found",
+	// 		"statusCode": 404,
+	// 	})
+	// 	return
+	// }
+
+	fmt.Println(c.Param("id"))
+
 	////if there is no basket then create one and give totalprice
 	if user.Basket == nil {
 		total_price += products.Price
-		newBasket := models.Basket{UserID: basket.UserID, TotalPrice: total_price}
+		newBasket := models.Basket{UserID: basket.UserID, TotalPrice: 0}
 		db.Create(&newBasket)
 	}
 	/////find basket items by basket_id
@@ -138,7 +153,7 @@ func AddItemsToBasket(c *gin.Context) {
 	if user.Basket == nil {
 		var basket []models.BasketItem
 		basket = append(basket, models.BasketItem{
-			// BasketId: user.ID,
+			BasketID: user.ID,
 			Quantity: 1,
 		})
 	}
@@ -151,9 +166,9 @@ func AddItemsToBasket(c *gin.Context) {
 	//update basket and total price
 
 	if user.Basket != nil {
-		var updateInput models.Basket
-		updateInput.UserID = updateBasket.UserId
-		updateInput.TotalPrice = total_price
+		var updateInput []models.BasketItem
+
+		// updateInput.BasketID = basket.ID
 		db.Model(&item).Updates(updateInput)
 	}
 
