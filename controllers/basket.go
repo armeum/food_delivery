@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"food_delivery/models"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -123,14 +124,16 @@ func UpdateBasket(c *gin.Context) {
 		return
 	}
 
-	// if basket.ID != strconv.ParseUint(c.Param("id")) {
-	// 	c.JSON(http.StatusForbidden, gin.H{
-	// 		"message":    "Route GET:/getAllCategories not found",
-	// 		"error":      "Record not found",
-	// 		"statusCode": 404,
-	// 	})
-	// 	return
-	// }
+	paramInt, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+
+	if basket.ID != uint(paramInt) {
+		c.JSON(http.StatusForbidden, gin.H{
+			"message":    "Route PUT:/basket not found",
+			"error":      "Record not found",
+			"statusCode": 403,
+		})
+		return
+	}
 
 	fmt.Println(c.Param("id"))
 
@@ -153,7 +156,7 @@ func UpdateBasket(c *gin.Context) {
 	if user.Basket == nil {
 		var basket []models.BasketItem
 		basket = append(basket, models.BasketItem{
-			BasketID: user.ID,
+			// BasketID: user.ID,
 			Quantity: 1,
 		})
 	}

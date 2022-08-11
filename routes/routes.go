@@ -4,8 +4,6 @@ import (
 	"food_delivery/middleware"
 	"headfirstgo/food_delivery/controllers"
 
-	cors "github.com/rs/cors/wrapper/gin"
-
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
@@ -16,7 +14,8 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 		ctx.Set("db", db)
 	})
 
-	r.Use(cors.AllowAll())
+	// r.Use(cors.AllowAll())
+	r.Use(middleware.CustomHeaderAPI)
 	/////translation
 	// r.GET("/:locale", controllers.Translation)
 
@@ -25,7 +24,7 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	r.POST("/auth/verify", controllers.Verification)
 	// r.Use(middleware.Authentication())
 	//////////users routes///////////
-	
+
 	r.Use(middleware.Authentication())
 
 	r.GET("/users", controllers.FindUsers)
