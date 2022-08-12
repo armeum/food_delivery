@@ -15,6 +15,7 @@ func main() {
 	db.AutoMigrate(&models.User{}, &models.Product{}, &models.Category{}, &models.Basket{}, &models.BasketItem{})
 
 	fmt.Println("Hello world!")
+
 	r := routes.UserRoutes(db)
 	r.Run(":8080")
 }

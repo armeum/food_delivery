@@ -6,17 +6,18 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	// cors "github.com/rs/cors/wrapper/gin"
+	// "github.com/rs/cors"
 )
 
 func UserRoutes(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
+	// r.Use(cors.AllowAll())
 	r.Use(func(ctx *gin.Context) {
 		ctx.Set("db", db)
 	})
 
-	// r.Use(cors.AllowAll())
-	r.Use(middleware.CustomHeaderAPI)
+	//
+	// r.Use(middleware.CustomHeaderAPI)
 	/////translation
 	// r.GET("/:locale", controllers.Translation)
 
@@ -29,7 +30,7 @@ func UserRoutes(db *gorm.DB) *gin.Engine {
 	r.GET("/products", controllers.FindProducts)
 	r.GET("/products/:id", controllers.FindProductById)
 	r.GET("/productbycategory/:category_id", controllers.FindProductByCategoryId)
-	r.GET("/products/!pizza", controllers.GetProductsExeptPizza)
+	r.GET("/products/!pizza", controllers.GetProductsExceptPizza)
 	r.POST("/product", controllers.AddProduct)
 	r.PATCH("/products/:id", controllers.UpdateProduct)
 	r.DELETE("/products/:id", controllers.DeleteProduct)
