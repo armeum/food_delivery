@@ -6,16 +6,17 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-
+	// "github.com/rs/cors"
 )
 
 func UserRoutes(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
+	// r.Use(cors.AllowAll())
 	r.Use(func(ctx *gin.Context) {
 		ctx.Set("db", db)
 	})
 
-	// r.Use(cors.AllowAll())
+	//
 	// r.Use(middleware.CustomHeaderAPI)
 	/////translation
 	// r.GET("/:locale", controllers.Translation)
