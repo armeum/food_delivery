@@ -137,9 +137,9 @@ func UpdateProduct(c *gin.Context) {
 func GetProductsExceptPizza(c *gin.Context){
 	var products []models.Product
 	db := c.MustGet("db").(*gorm.DB)
-	if err := db.Scopes(Paginate(c)).Order("category_id ASC").Where("category_id != ?", 1).Find(&products).Error; err != nil {
+	if err := db.Order("category_id ASC").Where("category_id != ?", 1).Find(&products).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message":    "Route GET:/product/:category_id not found",
+			"message":    "Route GET:/product/!pizza not found",
 			"error":      err.Error(),
 			"statusCode": 404,
 		})
