@@ -86,10 +86,10 @@ func UpdateBasket(c *gin.Context) {
 	var basket models.Basket
 	var basketItems []models.BasketItem
 	// var user models.User
-	var total_price uint
-	var updateBasketItemInput UpdateBasketItemInput
+	// var total_price uint
+	// var updateBasketItemInput UpdateBasketItemInput
 
-	var user_id = c.GetInt("id")
+	// var user_id = c.GetInt("id")
 	paramInt, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	// user_idInt := int(user_id)
 	////checking if user_id exists
@@ -124,26 +124,89 @@ func UpdateBasket(c *gin.Context) {
 		return
 	}
 	fmt.Println(basketItems)
-	var aa map[uint]models.BasketItem
+
+	var aa = []models.BasketItem{}
 
 	for _, item := range basketItems {
 		aa[item.ID] = item
 	}
 
-	var res []models.BasketItem
-	for _, item := range updateBasketItemInput.Items {
-		if val, ok := aa[item.ID]; ok {
-			aa[item.ID] = val
-			total_price += item.Quantity * item.Product.Price
-		} else {
-			aa[item.ID] = item
-			total_price += item.Quantity * item.Product.Price
-		}
-		res = append(res, aa[item.ID])
-	}
+	var body []models.BasketItem
+	var itm = new(models.BasketItem)
+	itm.BasketID = basket.ID
+	itm.ProductID = 3
+	itm.Quantity = 1
+	body = append(body, *itm)
+	fmt.Println(body[0], "item")
 
-	db.Model(&basketItems).Updates(res)
-	fmt.Println(user_id)
+	// var res []models.BasketItem
+	// for i := 0; i < len(body); i++ {
+	// 	// if item.ProductID  {
+	// 	if ok := aa[body[i].ProductID]; ok != nil {
+	// 		fmt.Println("true")
+	// 		fmt.Println(ok, "ok")
+	// 		// fmt.Println(val, "val")
+	// 		// aa[body[i].ProductID] = val
+	// 		total_price += body[i].Quantity * body[i].Product.Price
+	// 	} else {
+	// 		fmt.Println("false")
+	// 		fmt.Println(ok, "ok")
+	// 		// fmt.Println(val, "val")
+	// 		fmt.Println(body[i], "item")
+
+	// 		aa[body[i].ProductID] = body[i]
+	// 		total_price += body[i].Quantity * body[i].Product.Price
+	// 	}
+	// 	res = append(res, aa[body[i].ID])
+	// 	// }
+	// }
+
+	// var aa = map[uint]models.BasketItem {
+	// 	1: {
+	// 		ProductID: 1,
+	// 		Quantity: 1,
+	// 	},
+	// }
+
+	// // err := json.Unmarshal([]byte(aa), &aa)
+
+	// for _, item := range basketItems {
+	// 	aa[item.ID] = item
+	// }
+
+	// var body []models.BasketItem
+	// var itm = new(models.BasketItem)
+	// itm.BasketID = basket.ID
+	// itm.ProductID = 3
+	// itm.Quantity = 1
+	// body = append(body, *itm)
+	// fmt.Println(body[0], "item")
+
+	// var res []models.BasketItem
+	// for i := 0; i < len(body); i++ {
+	// 	// if item.ProductID  {
+	// 	if val, ok := aa[body[i].ProductID]; ok {
+	// 		fmt.Println("true")
+	// 		fmt.Println(ok, "ok")
+	// 		fmt.Println(val, "val")
+	// 		aa[body[i].ProductID] = val
+	// 		total_price += body[i].Quantity * body[i].Product.Price
+	// 	} else {
+	// 		fmt.Println("false")
+	// 		fmt.Println(ok, "ok")
+	// 		fmt.Println(val, "val")
+	// 		fmt.Println(body[i], "item")
+
+	// 		aa[body[i].ProductID] = body[i]
+	// 		total_price += body[i].Quantity * body[i].Product.Price
+	// 	}
+	// 	res = append(res, aa[body[i].ID])
+	// 	// }
+	// }
+
+	// fmt.Println(res)
+	// db.Model(&basketItems).Updates(res)
+	// fmt.Println(user_id)
 	fmt.Println(c.Get("phone_number"))
 	fmt.Println(c.Get("id"))
 
