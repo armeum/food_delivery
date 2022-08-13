@@ -36,6 +36,7 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.POST("/product", products.AddProduct)
 	r.PATCH("/products/:id", products.UpdateProduct)
 	r.DELETE("/products/:id", products.DeleteProduct)
+	r.GET("/products/souce", products.GetSouce)
 
 	///category routes/////////
 	r.POST("/category", categories.CreateCategory)

@@ -75,3 +75,18 @@ func GetProductsExceptPizza(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": products})
 
 }
+
+func GetSouce(c *gin.Context) {
+	var products []models.Product
+	db := c.MustGet("db").(*gorm.DB)
+	if err := db.Where("category_id = ?", 6).Order("id ASC").Find(&products).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message":    "Route GET:/product/!pizza not found",
+			"error":      err.Error(),
+			"statusCode": 404,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": products})
+
+}

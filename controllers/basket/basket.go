@@ -87,7 +87,7 @@ func UpdateBasket(c *gin.Context) {
 	var basketItems []models.BasketItem
 	// var user models.User
 	// var total_price uint
-	// var updateBasketItemInput UpdateBasketItemInput
+	// // var updateBasketItemInput UpdateBasketItemInput
 
 	// var user_id = c.GetInt("id")
 	paramInt, _ := strconv.ParseInt(c.Param("id"), 10, 64)
