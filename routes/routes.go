@@ -2,62 +2,67 @@ package routes
 
 import (
 	"food_delivery/middleware"
-	"headfirstgo/food_delivery/controllers"
+
+	controllers "headfirstgo/food_delivery/controllers"
+
+	basket "food_delivery/controllers/basket"
+	categories "food_delivery/controllers/categories"
+	admin "food_delivery/controllers/admin"
+	products "food_delivery/controllers/products"
+	users "food_delivery/controllers/users"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	// "github.com/rs/cors"
 )
 
-func UserRoutes(db *gorm.DB) *gin.Engine {
+func Routes(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
 	// r.Use(cors.AllowAll())
 	r.Use(func(ctx *gin.Context) {
 		ctx.Set("db", db)
 	})
 
-	//
-	// r.Use(middleware.CustomHeaderAPI)
-	/////translation
-	// r.GET("/:locale", controllers.Translation)
-
 	/////auth routes/////////
 	r.POST("/auth/login", controllers.Login)
 	r.POST("/auth/verify", controllers.Verification)
+	r.POST("/signup", controllers.SignUp)
 	// r.Use(middleware.Authentication())
 
 	//////products routes///////
-	r.GET("/products", controllers.FindProducts)
-	r.GET("/products/:id", controllers.FindProductById)
-	r.GET("/productbycategory/:category_id", controllers.FindProductByCategoryId)
-	r.GET("/products/!pizza", controllers.GetProductsExceptPizza)
-	r.POST("/product", controllers.AddProduct)
-	r.PATCH("/products/:id", controllers.UpdateProduct)
-	r.DELETE("/products/:id", controllers.DeleteProduct)
+	r.GET("/products", products.FindProducts)
+	r.GET("/products/:id", products.FindProductById)
+	r.GET("/productbycategory/:category_id", products.FindProductByCategoryId)
+	r.GET("/products/!pizza", products.GetProductsExceptPizza)
+	r.POST("/product", products.AddProduct)
+	r.PATCH("/products/:id", products.UpdateProduct)
+	r.DELETE("/products/:id", products.DeleteProduct)
 
 	///category routes/////////
-	r.POST("/category", controllers.CreateCategory)
-	r.GET("/categories", controllers.GetAllCategories)
-	r.GET("/category/:id", controllers.GetCategoryById)
-	r.PATCH("/category/:id", controllers.UpdateCategory)
-	r.DELETE("/category/:id", controllers.DeleteCategory)
+	r.POST("/category", categories.CreateCategory)
+	r.GET("/categories", categories.GetAllCategories)
+	r.GET("/category/:id", categories.GetCategoryById)
+	r.PATCH("/category/:id", categories.UpdateCategory)
+	r.DELETE("/category/:id", categories.DeleteCategory)
 
 	////cart routes/////////
-	// r.GET("/basket", controllers.GetBasket)
-	r.GET("/basket/:id", controllers.GetBasketById)
-	// r.DELETE("/basket/:id", controllers.DeleteBasket)
-	// r.POST("/basket", controllers.AddItem)
-	r.PUT("/basket/:id", controllers.UpdateBasket)
+	r.GET("/basket/:id", basket.GetBasketById)
+	r.PUT("/basket/:id", basket.UpdateBasket)
 
 	//////////users routes///////////
 
 	r.Use(middleware.Authentication())
 
-	r.GET("/users", controllers.FindUsers)
-	r.GET("/users/:id", controllers.FindUser)
-	r.POST("/user", controllers.CreateUser)
-	r.PATCH("/:users/:id", controllers.UpdateUser)
-	r.DELETE("/:users/:id", controllers.DeleteUser)
+	r.GET("/users", users.FindUsers)
+	r.GET("/users/:id", users.FindUser)
+	r.POST("/user", users.CreateUser)
+	r.PATCH("/:users/:id", users.UpdateUser)
+	r.DELETE("/:users/:id", users.DeleteUser)
+
+	r.GET("/admin", admin.FindAdmin)
+	r.GET("/admin/:id", admin.FindAdminById)
+	r.POST("/admin", admin.CreateAdmin)
+	r.PATCH("/admin/:id", admin.UpdateAdmin)
+	r.DELETE("/admin/:id", admin.DeleteAdmin)
 
 	return r
 }

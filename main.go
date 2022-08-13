@@ -16,6 +16,6 @@ func main() {
 
 	fmt.Println("Hello world!")
 
-	r := routes.UserRoutes(db)
+	r := routes.Routes(db)
 	r.Run(":8080")
 }

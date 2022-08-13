@@ -128,7 +128,7 @@ func UpdateBasket(c *gin.Context) {
 
 	for _, item := range basketItems {
 		aa[item.ID] = item
-	} 
+	}
 
 	var res []models.BasketItem
 	for _, item := range updateBasketItemInput.Items {
@@ -171,4 +171,3 @@ func GetBasketById(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"data": basket})
 }
-
