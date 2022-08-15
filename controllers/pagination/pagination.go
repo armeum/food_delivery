@@ -31,6 +31,8 @@ func Paginate(c *gin.Context) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
+
+
 //GeneratePaginationFromRequest ..
 // func GeneratePagination(c *gin.Context) models.Pagination {
 // 	// Initializing default

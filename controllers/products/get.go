@@ -12,14 +12,19 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// ////Find All Products
-func FindProducts(c *gin.Context) {
-	// var pagination controllers.GeneratePagination(c)
-	// offset := (pagination.Page - 1) * pagination.Limit   .Limit(pagination.Limit).Offset(offset)
 
+
+type CountProducts struct {
+	total int
+	// Products []models.Product
+}
+
+func Count(c *gin.Context){
+	var countProducts CountProducts  
+	
 	db := c.MustGet("db").(*gorm.DB)
 	var products []models.Product
-	if err := db.Scopes(pagination.Paginate(c)).Order("category_id asc").Order("id asc").Find(&products).Error; err != nil {
+	if err := db.Model(&products).Find(&products).Count(&countProducts.total).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Something went wrong",
 			"error":      "Record not found",
@@ -27,7 +32,26 @@ func FindProducts(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": products})
+	c.JSON(http.StatusOK, gin.H{ "data": countProducts.total})
+}
+
+// ////Find All Products
+func FindProducts(c *gin.Context) {
+	// var pagination controllers.GeneratePagination(c)
+	// offset := (pagination.Page - 1) * pagination.Limit   .Limit(pagination.Limit).Offset(offset)
+	var count int
+
+	db := c.MustGet("db").(*gorm.DB)
+	var products []models.Product
+	if err := db.Scopes(pagination.Paginate(c)).Order("category_id asc").Order("id asc").Find(&products).Count(&count).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message":    "Something went wrong",
+			"error":      "Record not found",
+			"statusCode": 404,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"total": count, "data": products})
 }
 
 // ////Find Products By its Id/////
@@ -46,7 +70,7 @@ func FindProductById(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": product})
 }
 
-// /// Find Products By Category Id
+ //  Find Products By Category Id
 func FindProductByCategoryId(c *gin.Context) {
 	var products []models.Product
 	db := c.MustGet("db").(*gorm.DB)

@@ -15,7 +15,7 @@ func DeleteProduct(c *gin.Context) {
 	var product models.Product
 	if err := db.Where("id = ?", c.Param("id")).Find(&product).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message":    "Route GET:/products/:id not found",
+			"message":    "Route DELETE:/products/:id not found",
 			"error":      err.Error(),
 			"statusCode": 404,
 		})

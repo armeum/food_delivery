@@ -25,11 +25,11 @@ func Routes(db *gorm.DB) *gin.Engine {
 	/////auth routes/////////
 	r.POST("/auth/login", controllers.Login)
 	r.POST("/auth/verify", controllers.Verification)
-	r.POST("/signup", controllers.SignUp)
 	// r.Use(middleware.Authentication())
 
 	//////products routes///////
 	r.GET("/products", products.FindProducts)
+	r.GET("/products/count", products.Count)
 	r.GET("/products/:id", products.FindProductById)
 	r.GET("/productbycategory/:category_id", products.FindProductByCategoryId)
 	r.GET("/products/!pizza", products.GetProductsExceptPizza)
@@ -50,7 +50,8 @@ func Routes(db *gorm.DB) *gin.Engine {
 	////BASKET routes/////////
 	// r.GET("/basket/:id", basket.GetBasketById)
 	r.GET("/baskets/:user_id", basket.CheckUserBasket)
-	r.PUT("/basket/:user_id", basket.UpdateBasket)
+	// r.PUT("/basket/:user_id", basket.UpdateBasket)
+	r.PUT("/basket/:id", basket.Basket)
 	// r.POST("/basket", basket.AddBasket)
 
 
