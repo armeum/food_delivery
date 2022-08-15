@@ -5,9 +5,9 @@ import (
 
 	controllers "headfirstgo/food_delivery/controllers"
 
+	admin "food_delivery/controllers/admin"
 	basket "food_delivery/controllers/basket"
 	categories "food_delivery/controllers/categories"
-	admin "food_delivery/controllers/admin"
 	products "food_delivery/controllers/products"
 	users "food_delivery/controllers/users"
 
@@ -17,7 +17,7 @@ import (
 
 func Routes(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
-	// r.Use(cors.AllowAll())
+	r.Use(middleware.CORSMiddleware())
 	r.Use(func(ctx *gin.Context) {
 		ctx.Set("db", db)
 	})
@@ -45,13 +45,17 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.PATCH("/category/:id", categories.UpdateCategory)
 	r.DELETE("/category/:id", categories.DeleteCategory)
 
-	////cart routes/////////
-	r.GET("/basket/:id", basket.GetBasketById)
-	r.PUT("/basket/:id", basket.UpdateBasket)
+	r.Use(middleware.Authentication())
+
+	////BASKET routes/////////
+	// r.GET("/basket/:id", basket.GetBasketById)
+	r.GET("/baskets/:user_id", basket.CheckUserBasket)
+	r.PUT("/basket/:user_id", basket.UpdateBasket)
+	// r.POST("/basket", basket.AddBasket)
+
 
 	//////////users routes///////////
 
-	r.Use(middleware.Authentication())
 
 	r.GET("/users", users.FindUsers)
 	r.GET("/users/:id", users.FindUser)

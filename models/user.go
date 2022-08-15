@@ -15,5 +15,5 @@ type User struct {
 	// Email       string `gorm:"typevarchar(100);unique_index" json:"email"`
 	// DateOfBirth string `json:"date_of_birth"`
 	Password string   `json:"password" binding:"required"`
-	Basket   []Basket `json:"basket" gorm:"foreignKey:id"`
+	Basket   []Basket `gorm:"foreignKey:user_id" json:"basket"`
 }
