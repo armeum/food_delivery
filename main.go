@@ -12,7 +12,7 @@ import (
 func main() {
 	//close databse when the main func is finishes
 	db := database.SetupPostgres()
-	db.AutoMigrate(&models.User{}, &models.Product{}, &models.Category{}, &models.Basket{}, &models.BasketItem{})
+	db.AutoMigrate(&models.User{}, &models.Product{}, &models.Category{}, &models.Basket{}, &models.BasketItem{}, &models.ProductPrice{})
 
 	fmt.Println("Hello world!")
 
