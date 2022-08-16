@@ -43,7 +43,7 @@ func FindProducts(c *gin.Context) {
 
 	db := c.MustGet("db").(*gorm.DB)
 	var products []models.Product
-	if err := db.Scopes(pagination.Paginate(c)).Order("category_id asc").Order("id asc").Find(&products).Count(&count).Error; err != nil {
+	if err := db.Scopes(pagination.Paginate(c)).Order("category_id asc").Order("id asc").Preload("Prices").Find(&products).Count(&count).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Something went wrong",
 			"error":      "Record not found",
