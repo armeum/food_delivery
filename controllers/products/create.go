@@ -10,12 +10,13 @@ import (
 
 type AddProductInput struct {
 	gorm.Model
-	Title        string `gorm:"column:title" json:"title"`
-	Description  string `gorm:"column:description" json:"description"`
-	Price        uint   `gorm:"column:price"`
-	Image        string `gorm:"column:image" json:"image"`
-	CategoryID   int    `gorm:"column:category_id;foreignkey:product_id" json:"category_id"`
-	CategoryName string `gorm:"column:category_name" json:"category_name"`
+	Title        string              `gorm:"column:title" json:"title"`
+	Description  string              `gorm:"column:description" json:"description"`
+	Price        uint                `gorm:"column:price"`
+	Image        string              `gorm:"column:image" json:"image"`
+	Prices      [] models.ProductPrice `gorm:"column:prices" json:"prices"`
+	CategoryID   int                 `gorm:"column:category_id;foreignkey:product_id" json:"category_id"`
+	CategoryName string              `gorm:"column:category_name" json:"category_name"`
 }
 
 // ////Adding Product
@@ -34,7 +35,7 @@ func AddProduct(c *gin.Context) {
 	}
 
 	//Create product
-	product := models.Product{Title: input.Title, Description: input.Description, Price: input.Price, Image: input.Image, CategoryID: input.CategoryID, CategoryName: input.CategoryName}
+	product := models.Product{Title: input.Title, Description: input.Description, Price: input.Price, Image: input.Image, Prices: input.Prices, CategoryID: input.CategoryID, CategoryName: input.CategoryName}
 	db.Create(&product)
-	c.JSON(http.StatusOK, gin.H{"data": product})
+	c.JSON(http.StatusCreated, gin.H{"data": product})
 }

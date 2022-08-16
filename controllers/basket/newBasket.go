@@ -16,9 +16,6 @@ func Basket(c *gin.Context) {
 	var basketItems []models.BasketItem
 	var basket models.Basket
 
-	basketID := c.MustGet("id").(int)
-	fmt.Println(basketID)
-
 	productId := c.MustGet("id").(int)
 	fmt.Println(productId)
 

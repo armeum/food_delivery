@@ -15,7 +15,9 @@ func Paginate(c *gin.Context) func(db *gorm.DB) *gorm.DB {
 			page = 1
 		}
 
-		limit, _ := strconv.Atoi(q.Get("limit"))
+		limit := 0
+
+		limit, _ = strconv.Atoi(q.Get("limit"))
 		switch {
 		case limit >= 100:
 			limit = 100
@@ -23,8 +25,12 @@ func Paginate(c *gin.Context) func(db *gorm.DB) *gorm.DB {
 			limit = 1
 		case limit == 2:
 			limit = 2
+		case limit == 3:
+			limit = 3
+		case limit == 4:
+			limit = 4
 		default:
-			limit = 100
+			limit = 10
 		}
 		offset := (page - 1) * limit
 		return db.Offset(offset).Limit(limit)
