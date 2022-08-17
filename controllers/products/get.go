@@ -37,13 +37,11 @@ func Count(c *gin.Context){
 
 // ////Find All Products
 func FindProducts(c *gin.Context) {
-	// var pagination controllers.GeneratePagination(c)
-	// offset := (pagination.Page - 1) * pagination.Limit   .Limit(pagination.Limit).Offset(offset)
 	var count int
 
 	db := c.MustGet("db").(*gorm.DB)
 	var products []models.Product
-	if err := db.Scopes(pagination.Paginate(c)).Order("category_id asc").Order("id asc").Preload("Prices").Find(&products).Count(&count).Error; err != nil {
+	if err := db.Scopes(pagination.Paginate(c)).Order("category_id asc").Order("id asc").Preload("Prices").Find(&products).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Something went wrong",
 			"error":      "Record not found",
@@ -51,6 +49,8 @@ func FindProducts(c *gin.Context) {
 		})
 		return
 	}
+
+	db.Model([]models.Product{}).Count(&count)
 	c.JSON(http.StatusOK, gin.H{"total": count, "data": products})
 }
 

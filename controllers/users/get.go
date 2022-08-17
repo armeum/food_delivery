@@ -11,6 +11,7 @@ import (
 )
 
 func FindUsers(c *gin.Context) {
+	var count int
 
 	db := c.MustGet("db").(*gorm.DB)
 	var users []models.User
@@ -22,7 +23,9 @@ func FindUsers(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": users})
+	db.Model([]models.User{}).Count(&count)
+
+	c.JSON(http.StatusOK, gin.H{"data": users, "total": count})
 
 }
 func FindUser(c *gin.Context) {

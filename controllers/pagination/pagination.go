@@ -1,43 +1,68 @@
 package controllers
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
 
+
 func Paginate(c *gin.Context) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		q := c.Request.URL.Query()
 		page, _ := strconv.Atoi(q.Get("page"))
-		if page == 0 {
-			page = 1
-		}
+		limit, _ := strconv.Atoi(q.Get("limit"))
+		emptyStringToInt, _ := strconv.Atoi("")
+		offset := limit * (page - 1)
 
-		limit := 0
-
-		limit, _ = strconv.Atoi(q.Get("limit"))
-		switch {
-		case limit >= 100:
-			limit = 100
-		case limit == 1:
-			limit = 1
-		case limit == 2:
-			limit = 2
-		case limit == 3:
-			limit = 3
-		case limit == 4:
-			limit = 4
-		default:
+		if limit == emptyStringToInt {
 			limit = 10
 		}
-		offset := (page - 1) * limit
-		return db.Offset(offset).Limit(limit)
+		// else if !math.IsNaN(float64(limit)) {
+		// 	limit = 10
+		// }
+
+		if page == emptyStringToInt {
+			page = 1
+		} 
+		
+		fmt.Println(limit, offset)
+		return db.Limit(limit).Offset(offset)
 	}
 }
 
 
+// func Paginate(c *gin.Context) func(db *gorm.DB) *gorm.DB {
+// 	return func(db *gorm.DB) *gorm.DB {
+// 		q := c.Request.URL.Query()
+// 		page, _ := strconv.Atoi(q.Get("page"))
+// 		if page == 0 {
+// 			page = 1
+// 		}
+
+// 		limit := 0
+
+// 		limit, _ = strconv.Atoi(q.Get("limit"))
+// 		switch {
+// 		case limit >= 100:
+// 			limit = 100
+// 		case limit == 1:
+// 			limit = 1
+// 		case limit == 2:
+// 			limit = 2
+// 		case limit == 3:
+// 			limit = 3
+// 		case limit == 4:
+// 			limit = 4
+// 		default:
+// 			limit = 10
+// 		}
+// 		offset := (page - 1) * limit
+// 		return db.Offset(offset).Limit(limit)
+// 	}
+// }
 
 //GeneratePaginationFromRequest ..
 // func GeneratePagination(c *gin.Context) models.Pagination {

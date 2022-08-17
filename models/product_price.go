@@ -16,3 +16,4 @@ const (
 	Medium SizeType = "medium"
 	Big    SizeType = "big"
 )
+
