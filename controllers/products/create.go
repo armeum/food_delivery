@@ -29,11 +29,10 @@ func AddProduct(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route POST:/product not found",
 			"error":      err.Error(),
-			"statusCode": 404,
+			"statusCode": http.StatusBadRequest,
 		})
 		return
 	}
-	
 	//Create product
 	product := models.Product{Title: input.Title, Description: input.Description, Price: input.Price, Image: input.Image, Prices: input.Prices, CategoryID: input.CategoryID, CategoryName: input.CategoryName}
 	db.Create(&product)

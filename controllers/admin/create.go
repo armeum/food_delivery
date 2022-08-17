@@ -20,7 +20,7 @@ func CreateAdmin(c *gin.Context) {
 	var input CreateAdminInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message":    "Route POST:/user not found",
+			"message":    "Route POST:/admin not found",
 			"error":      err.Error(),
 			"statusCode": 404,
 		})
@@ -33,6 +33,6 @@ func CreateAdmin(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	db.Create(&admin)
 
-	c.JSON(http.StatusOK, gin.H{"data": admin})
+	c.JSON(http.StatusCreated, gin.H{"data": admin})
 
 }

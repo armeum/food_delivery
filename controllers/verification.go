@@ -54,9 +54,9 @@ func Verification(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"password": user.Password, "basket": user.Basket,"phone_number": user.PhoneNumber,"id": user.ID, "first_name": user.FirstName, "acces_token": signedToken})
 	} else {
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"message":    "Route Post:/auth not found",
+			"message":    "Unauthorized",
 			"error":      err.Error(),
-			"statusCode": 404,
+			"statusCode": http.StatusUnauthorized,
 		})
 	}
 }

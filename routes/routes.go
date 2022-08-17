@@ -29,7 +29,6 @@ func Routes(db *gorm.DB) *gin.Engine {
 
 	//////products routes///////
 	r.GET("/products", products.FindProducts)
-	r.GET("/products/count", products.Count)
 	r.GET("/products/:id", products.FindProductById)
 	r.GET("/productbycategory/:category_id", products.FindProductByCategoryId)
 	r.GET("/products/!pizza", products.GetProductsExceptPizza)

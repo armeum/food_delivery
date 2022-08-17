@@ -11,9 +11,9 @@ import (
 
 type CreateUserInput struct {
 	gorm.Model
-	FirstName   string    `json:"first_name"`
+	FirstName   string    `json:"first_name" binding:"required"`
 	LastName    string    `json:"last_name"`
-	PhoneNumber string    `json:"phone_number"`
+	PhoneNumber string    `json:"phone_number" binding:"required"`
 	Email       string    `json:"email"`
 	DateOfBirth string    `json:"date_of_birth"`
 	CreatedAt   time.Time `json:"created_at"`
@@ -38,6 +38,6 @@ func CreateUser(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	db.Create(&user)
 
-	c.JSON(http.StatusOK, gin.H{"data": user})
+	c.JSON(http.StatusCreated, gin.H{"data": user})
 
 }

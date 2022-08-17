@@ -12,14 +12,17 @@ import (
 
 func Basket(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
+	var product models.Product
+
+	var user_id = uint(c.GetInt("id"))
 
 	var basketItems []models.BasketItem
 	var basket models.Basket
 
-	productId := c.MustGet("id").(int)
-	fmt.Println(productId)
-
-	var product models.Product
+	if user_id == basket.ID{
+		db.Where("id = ?", c.GetInt("id")).Find(&product)
+		basketItems = append(basketItems, )
+	}
 	id := c.GetInt("id")
 	getProduct(c, uint(id))
 

@@ -31,7 +31,7 @@ func UpdateAdmin(c *gin.Context) {
 
 	if err := db.Where("id = ?", c.Param("id")).First(&admin).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message":    "Rout Patch:/users/:id not found",
+			"message":    "Rout Patch:/admin/:id not found",
 			"error":      err.Error(),
 			"statusCode": 404,
 		})

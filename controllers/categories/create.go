@@ -29,5 +29,5 @@ func CreateCategory(c *gin.Context) {
 	category := models.Category{CategoryName: input.CategoryName}
 
 	db.Create(&category)
-	c.JSON(http.StatusOK, gin.H{"data": category})
+	c.JSON(http.StatusCreated, gin.H{"data": category})
 }

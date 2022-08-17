@@ -31,7 +31,7 @@ func FindAdminById(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	if err := db.Where("id = ?", c.Param("id")).Find(&admin).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message":    "Route GET:/users/:id not found",
+			"message":    "Route GET:/admin/:id not found",
 			"error":      "Record not found",
 			"statusCode": 404,
 		})
