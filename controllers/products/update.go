@@ -31,7 +31,7 @@ func UpdateProduct(c *gin.Context) {
 	var product models.Product
 	if err := db.Where("id = ?", c.Param("id")).First(&product).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message":    "Rout Patch:/products/:id not found",
+			"message":    "Route Patch:/products/:id not found",
 			"error":      err.Error(),
 			"statusCode": 404,
 		})
@@ -47,7 +47,6 @@ func UpdateProduct(c *gin.Context) {
 	updateInput.CategoryName = input.CategoryName
 
 	db.Model(&product).Updates(updateInput)
-
 	c.JSON(http.StatusOK, gin.H{"data": product})
 
 }

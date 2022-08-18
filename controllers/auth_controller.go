@@ -35,6 +35,7 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	
 	//get model if exists
 	var user models.User
 	db := c.MustGet("db").(*gorm.DB)

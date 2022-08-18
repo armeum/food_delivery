@@ -9,7 +9,9 @@ import (
 	basket "food_delivery/controllers/basket"
 	categories "food_delivery/controllers/categories"
 	products "food_delivery/controllers/products"
+	restaurants "food_delivery/controllers/restaurants"
 	users "food_delivery/controllers/users"
+	regions "food_delivery/controllers/regions"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -44,6 +46,21 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.PATCH("/category/:id", categories.UpdateCategory)
 	r.DELETE("/category/:id", categories.DeleteCategory)
 
+		//////RESTAURANT routes///////
+	r.GET("/restaurants", restaurants.FindAll)
+	r.GET("/restaurant/:id", restaurants.FindRestaurant)
+	r.POST("/restaurant", restaurants.AddRestaurant)
+	r.PATCH("/restaurant/:id", restaurants.UpdateRestaurant)
+	r.DELETE("/restaurant/:id", restaurants.DeleteRestaurant)
+
+	/////Regions routes////////////
+	r.GET("/regions", regions.FindAll)
+	r.GET("/region/:id", regions.FindRegionById)
+	r.POST("/region", regions.AddRegion)
+	r.PATCH("/region/:id", regions.UpdateRegion)
+	r.DELETE("/region/:id", regions.DeleteRegion)
+
+
 	r.Use(middleware.Authentication())
 
 	////BASKET routes/////////
@@ -53,9 +70,7 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.PUT("/basket/:id", basket.Basket)
 	// r.POST("/basket", basket.AddBasket)
 
-
 	//////////users routes///////////
-
 
 	r.GET("/users", users.FindUsers)
 	r.GET("/users/:id", users.FindUser)
@@ -63,11 +78,14 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.PATCH("/:users/:id", users.UpdateUser)
 	r.DELETE("/:users/:id", users.DeleteUser)
 
+	////////admin routes////////
 	r.GET("/admin", admin.FindAdmin)
 	r.GET("/admin/:id", admin.FindAdminById)
 	r.POST("/admin", admin.CreateAdmin)
 	r.PATCH("/admin/:id", admin.UpdateAdmin)
 	r.DELETE("/admin/:id", admin.DeleteAdmin)
 
+
+	
 	return r
 }
