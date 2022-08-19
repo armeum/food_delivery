@@ -41,6 +41,4 @@ func FindRegionById(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusOK, gin.H{"data": region})
 	}
-
-
 }

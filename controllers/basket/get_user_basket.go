@@ -34,3 +34,4 @@ func CheckUserBasket(c *gin.Context) {
 	// db.Create(&basketItem)
 	// c.JSON(http.StatusOK, gin.H{"data": basketItem})
 }
+

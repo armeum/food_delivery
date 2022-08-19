@@ -12,11 +12,15 @@ type LoginBody struct {
 }
 
 func Login(c *gin.Context) {
-
 	var input LoginBody
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Route POST:/login failed",
+			"error": err.Error(),
+			"statusCode": http.StatusBadRequest,
+		})
 		return
 	}
-
 }
+
+

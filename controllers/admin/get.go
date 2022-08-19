@@ -11,7 +11,6 @@ import (
 )
 
 func FindAdmin(c *gin.Context) {
-
 	db := c.MustGet("db").(*gorm.DB)
 	var admin []models.Admin
 	if err := db.Scopes(pagination.Paginate(c)).Order("created_at ASC").Find(&admin).Error; err != nil {
@@ -23,8 +22,8 @@ func FindAdmin(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": admin})
-
 }
+
 func FindAdminById(c *gin.Context) {
 	//get model if exists
 	var admin models.Admin
@@ -37,6 +36,5 @@ func FindAdminById(c *gin.Context) {
 		})
 		return
 	}
-
 	c.JSON(http.StatusOK, gin.H{"data": admin})
 }

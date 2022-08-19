@@ -173,13 +173,13 @@ func UpdateBasket1(c *gin.Context) {
 	// 	aa[item.ID] = item
 	// }
 
-	body_map := map[uint]models.BasketItem{
+	body_map := (map[uint]models.BasketItem{
 		3: {
 			BasketID:  basket.ID,
 			ProductID: 3,
 			Quantity:  1,
 		},
-	}
+	})
 	var res []models.BasketItem = []models.BasketItem{}
 
 	for p_id, basketItem := range body_map {

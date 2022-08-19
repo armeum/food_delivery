@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"food_delivery/models"
+	"log"
 
 	"net/http"
 
@@ -14,15 +15,22 @@ func Basket(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var product models.Product
 
-	var user_id = uint(c.GetInt("id"))
+	// var user_id = uint(c.GetInt("id"))
 
 	var basketItems []models.BasketItem
 	var basket models.Basket
 
-	if user_id == basket.ID{
-		db.Where("id = ?", c.GetInt("id")).Find(&product)
-		basketItems = append(basketItems, )
-	}
+	myMap := make(map[string]string)
+	log.Println(myMap["product"])
+	basket_map := make(map[uint]string)
+	log.Println(basket_map[2])
+	basket_items := make(map[int]string)
+	log.Println(basket_items)
+
+	// if user_id == basket.ID {
+	// 	db.Where("id = ?", c.GetInt("id")).Find(&product)
+	// 	basketItems = append(basketItems)
+	// }
 	id := c.GetInt("id")
 	getProduct(c, uint(id))
 
@@ -30,7 +38,7 @@ func Basket(c *gin.Context) {
 
 	if basketItems == nil {
 		basketItems = append(basketItems, models.BasketItem{
-			BasketID: basket.ID,
+			BasketID:  basket.ID,
 			ProductID: product.ID,
 			Quantity:  1,
 		})
@@ -38,7 +46,7 @@ func Basket(c *gin.Context) {
 		index := exists(product.ID, basketItems)
 		if index == 0 {
 			basketItems = append(basketItems, models.BasketItem{
-				BasketID: basket.ID,
+				BasketID:  basket.ID,
 				ProductID: product.ID,
 				Quantity:  1,
 			})
