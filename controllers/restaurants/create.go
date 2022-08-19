@@ -12,7 +12,8 @@ type AddRestaurantInput struct {
 	gorm.Model
 	Name        string `json:"name"`
 	Description string `json:"description"`
-	Time        string `json:"time"`
+	From        string `json:"from"`
+	To          string `json:"to"`
 }
 
 func AddRestaurant(c *gin.Context) {
@@ -29,7 +30,7 @@ func AddRestaurant(c *gin.Context) {
 		return
 	}
 
-	restaurant := models.Restaurants{Name: input.Name, Description: input.Description, Time: input.Time}
+	restaurant := models.Restaurants{Name: input.Name, Description: input.Description, From: input.From, To: input.To}
 	db.Create(&restaurant)
 	c.JSON(http.StatusCreated, gin.H{"data": restaurant})
 }

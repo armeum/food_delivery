@@ -6,7 +6,8 @@ type Restaurants struct {
 	gorm.Model
 	Name        string `json:"name"`
 	Description string `json:"description"`
-	Time        string `json:"time"`
+	From        string `json:"from"`
+	To          string `json:"to"`
 }
 
 func (restaurants *Restaurants) TableName() string {

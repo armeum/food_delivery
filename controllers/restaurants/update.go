@@ -11,7 +11,8 @@ import (
 type UpdateRestaurantInput struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
-	Time        string `json:"time"`
+	From        string `json:"from"`
+	To          string `json:"to"`
 }
 
 func UpdateRestaurant(c *gin.Context) {
@@ -38,7 +39,8 @@ func UpdateRestaurant(c *gin.Context) {
 	var updateInput models.Restaurants
 	updateInput.Name = input.Name
 	updateInput.Description = input.Description
-	updateInput.Time = input.Time
+	updateInput.From = input.From
+	updateInput.To = input.To
 
 	db.Model(&restaurant).Updates(updateInput)
 
