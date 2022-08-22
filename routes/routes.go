@@ -3,15 +3,15 @@ package routes
 import (
 	"food_delivery/middleware"
 
-	controllers "headfirstgo/food_delivery/controllers"
+	controllers "food_delivery/controllers"
 
 	admin "food_delivery/controllers/admin"
 	basket "food_delivery/controllers/basket"
 	categories "food_delivery/controllers/categories"
 	products "food_delivery/controllers/products"
+	regions "food_delivery/controllers/regions"
 	restaurants "food_delivery/controllers/restaurants"
 	users "food_delivery/controllers/users"
-	regions "food_delivery/controllers/regions"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -29,9 +29,7 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.POST("/auth/verify", controllers.Verification)
 	// r.Use(middleware.Authentication())
 
-	
 	r.Use(middleware.Authentication())
-
 
 	//////products routes///////
 	r.GET("/products", products.FindProducts)
@@ -50,7 +48,7 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.PATCH("/category/:id", categories.UpdateCategory)
 	r.DELETE("/category/:id", categories.DeleteCategory)
 
-		//////RESTAURANT routes///////
+	//////RESTAURANT routes///////
 	r.GET("/restaurants", restaurants.FindAll)
 	r.GET("/restaurant/:id", restaurants.FindRestaurant)
 	r.POST("/restaurant", restaurants.AddRestaurant)
@@ -63,8 +61,6 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.POST("/region", regions.AddRegion)
 	r.PATCH("/region/:id", regions.UpdateRegion)
 	r.DELETE("/region/:id", regions.DeleteRegion)
-
-
 
 	////BASKET routes/////////
 	// r.GET("/basket/:id", basket.GetBasketById)
@@ -88,7 +84,5 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.PATCH("/admin/:id", admin.UpdateAdmin)
 	r.DELETE("/admin/:id", admin.DeleteAdmin)
 
-
-	
 	return r
 }

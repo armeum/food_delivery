@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"headfirstgo/food_delivery/models"
+	"food_delivery/models"
 	"log"
 	"math/rand"
 	"net/http"
@@ -20,7 +20,7 @@ type LoginBody struct {
 	PhoneNumber string `gorm:"typevarchar(5);unique_index" json:"phone_number"`
 }
 
- func Login(c *gin.Context) {
+func Login(c *gin.Context) {
 	//validate input
 	var input LoginBody
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -36,12 +36,13 @@ type LoginBody struct {
 	if err := db.
 		Where("phone_number = ?", input.PhoneNumber).
 		First(&user); err != nil {
+		fmt.Printf("\n%+v\n", err)
 		user := models.User{
 			PhoneNumber: input.PhoneNumber,
 		}
 		db := c.MustGet("db").(*gorm.DB)
-		db.Create(&user)
 		user.Password = RandomPassword()
+		db.Create(&user)
 		SmsSender(user.FirstName, user.PhoneNumber, user.Password)
 		c.JSON(http.StatusOK, gin.H{
 			"Password successfully sent to the phone number": user.PhoneNumber,

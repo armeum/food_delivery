@@ -11,14 +11,14 @@ var db *gorm.DB
 var err error
 
 const (
-	host     = "localhost"
+	host     = "13.229.69.55"
 	port     = "5432"
 	user     = "postgres"
-	password = "root"
-	dbname   = "food_delivery"
+	password = "postgres"
+	dbname   = "foof_delivery"
 )
 
-func SetupPostgres() (*gorm.DB) {
+func SetupPostgres() *gorm.DB {
 	//Loading environment variables
 
 	// dialect := os.Getenv("DIALECT")
@@ -37,4 +37,3 @@ func SetupPostgres() (*gorm.DB) {
 	return db
 
 }
-

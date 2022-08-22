@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"fmt"
-	"headfirstgo/food_delivery/models"
+	"food_delivery/models"
 	"net/http"
 	"strconv"
 	"time"

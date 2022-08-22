@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"headfirstgo/food_delivery/models"
+	"food_delivery/models"
 	"net/http"
 	"time"
 
@@ -35,7 +35,7 @@ func CreateUser(c *gin.Context) {
 	//Create user
 
 	user := models.User{
-		FirstName: input.FirstName, 
+		FirstName:   input.FirstName,
 		PhoneNumber: input.PhoneNumber,
 		DateOfBirth: input.DateOfBirth,
 	}

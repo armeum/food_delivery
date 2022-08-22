@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"headfirstgo/food_delivery/models"
+	"food_delivery/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,7 +10,7 @@ import (
 
 type CreateAdminInput struct {
 	gorm.Model
-	Name   string `json:"first_name"`
+	Name        string `json:"first_name"`
 	PhoneNumber string `json:"phone_number"`
 }
 

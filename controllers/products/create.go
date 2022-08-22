@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"headfirstgo/food_delivery/models"
+	"food_delivery/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

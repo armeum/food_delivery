@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"headfirstgo/food_delivery/models"
 	pagination "food_delivery/controllers/pagination"
+	"food_delivery/models"
 
 	"net/http"
 

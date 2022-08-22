@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"headfirstgo/food_delivery/database"
-	"headfirstgo/food_delivery/models"
-	"headfirstgo/food_delivery/routes"
+	"food_delivery/database"
+	"food_delivery/models"
+	"food_delivery/routes"
 
 	_ "github.com/jinzhu/gorm"
 )

@@ -2,7 +2,7 @@ package controllers
 
 import (
 	pagination "food_delivery/controllers/pagination"
-	"headfirstgo/food_delivery/models"
+	"food_delivery/models"
 
 	"net/http"
 

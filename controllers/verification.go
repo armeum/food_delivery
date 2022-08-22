@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"fmt"
+	"food_delivery/models"
 	"food_delivery/tokens"
-	"headfirstgo/food_delivery/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +17,6 @@ type VerifyUser struct {
 
 func Verification(c *gin.Context) {
 
-	var err error
 	//validate input
 	var input VerifyUser
 
@@ -53,23 +52,23 @@ func Verification(c *gin.Context) {
 			return
 		} else if user.Password != input.Password {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"message": "something went wrong",
-				"error":   err.Error(),
+				"message":    "something went wrong",
+				"error":      err.Error(),
 				"statusCode": 400,
 			})
 		}
 
-		c.JSON(http.StatusOK, gin.H{"password": user.Password, "basket": user.Basket,"phone_number": user.PhoneNumber,"id": user.ID, "first_name": user.FirstName, "acces_token": signedToken})
-	} else if  input.Password != user.Password {
+		c.JSON(http.StatusOK, gin.H{"password": user.Password, "basket": user.Basket, "phone_number": user.PhoneNumber, "id": user.ID, "first_name": user.FirstName, "acces_token": signedToken})
+	} else if input.Password != user.Password {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "something went wrong",
-			"error":   err.Error(),
-			"statusCode": 400,
+			"message":    "something went wrong",
+			"error":      "",
+			"statusCode": 403,
 		})
-	}	else  {
+	} else {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"message":    "Unauthorized",
-			"error":      err.Error(),
+			"error":      "",
 			"statusCode": http.StatusUnauthorized,
 		})
 	}
