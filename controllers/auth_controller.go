@@ -44,7 +44,7 @@ type LoginBody struct {
 		user.Password = RandomPassword()
 		SmsSender(user.FirstName, user.PhoneNumber, user.Password)
 		c.JSON(http.StatusOK, gin.H{
-			"Password successfully sent to the phone number": user.PhoneNumber, "password": user.Password,
+			"Password successfully sent to the phone number": user.PhoneNumber,
 		})
 		db.Save(&user)
 	}
