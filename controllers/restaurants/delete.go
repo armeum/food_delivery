@@ -13,10 +13,13 @@ func DeleteRestaurant(c *gin.Context) {
 
 	var restaurant models.Restaurants
 
-	if err := db.Where("id = ?", c.Param("id")).Find(&restaurant).Error; err != nil {
+	if err := db.
+		Where("id = ?", c.Param("id")).
+		Find(&restaurant).
+		Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Route Delete:/restaurant not found",
-			"error": err.Error(),
+			"message":    "Route Delete:/restaurant not found",
+			"error":      err.Error(),
 			"statusCode": http.StatusBadRequest,
 		})
 		return

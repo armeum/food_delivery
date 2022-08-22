@@ -29,7 +29,11 @@ func UpdateProduct(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	//Get model if exists
 	var product models.Product
-	if err := db.Where("id = ?", c.Param("id")).Preload("Prices.ProductPastry").First(&product).Error; err != nil {
+	if err := db.
+		Where("id = ?", c.Param("id")).
+		Preload("Prices.ProductPastry").
+		First(&product).
+		Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route Patch:/products/:id not found",
 			"error":      err.Error(),

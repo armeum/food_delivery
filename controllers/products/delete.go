@@ -13,7 +13,11 @@ func DeleteProduct(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	///get model if exists
 	var product models.Product
-	if err := db.Where("id = ?", c.Param("id")).Find(&product).Error; err != nil {
+	if err := db.
+		Where("id = ?", c.Param("id")).
+		Preload("Prices.ProductPastry").
+		Find(&product).
+		Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route DELETE:/products/:id not found",
 			"error":      err.Error(),

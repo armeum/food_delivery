@@ -33,7 +33,10 @@ func UpdateUser(c *gin.Context) {
 	//Get model if exists
 	var user models.User
 
-	if err := db.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
+	if err := db.
+		Where("id = ?", c.Param("id")).
+		First(&user).
+		Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Rout Patch:/users/:id not found",
 			"error":      err.Error(),

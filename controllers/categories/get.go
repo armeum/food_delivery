@@ -10,10 +10,15 @@ import (
 
 // Getting all categories
 func GetAllCategories(c *gin.Context) {
+	var count int
 	var categories []models.Category
 	db := c.MustGet("db").(*gorm.DB)
 
-	if err := db.Scopes(pagination.Paginate(c)).Preload("Product").Find(&categories).Error; err != nil {
+	if err := db.
+	Scopes(pagination.Paginate(c)).
+	Preload("Product").
+	Find(&categories).
+	Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/getAllCategories not found",
 			"error":      "Record not found",
@@ -21,7 +26,8 @@ func GetAllCategories(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": categories})
+	db.Model(&models.Category{}).Count(&count)
+	c.JSON(http.StatusOK, gin.H{"total": count, "data": categories})
 }
 
 // //Getting Category by its Id

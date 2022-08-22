@@ -27,7 +27,10 @@ func UpdateRestaurant(c *gin.Context) {
 		return
 	}
 
-	if err := db.Where("id = ?", c.Param("id")).First(&restaurant).Error; err != nil {
+	if err := db.
+		Where("id = ?", c.Param("id")).
+		First(&restaurant).
+		Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route PATCH:/restaurant/:id not found",
 			"error":      err.Error(),

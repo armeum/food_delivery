@@ -14,10 +14,12 @@ func FindAll(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var regions []models.Regions
 
-	if err := db.Find(&regions).Error; err != nil {
+	if err := db.
+		Find(&regions).
+		Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Route GET:/regions not found",
-			"error": err.Error(),
+			"message":    "Route GET:/regions not found",
+			"error":      err.Error(),
 			"statusCode": http.StatusBadRequest,
 		})
 	}
@@ -31,10 +33,13 @@ func FindRegionById(c *gin.Context) {
 
 	db := c.MustGet("db").(*gorm.DB)
 
-	if err := db.Where("id = ?", c.Param("id")).First(&region).Error; err != nil {
+	if err := db.
+		Where("id = ?", c.Param("id")).
+		First(&region).
+		Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Route GET:/region/:id not found",
-			"error": err.Error(),
+			"message":    "Route GET:/region/:id not found",
+			"error":      err.Error(),
 			"statusCode": http.StatusBadRequest,
 		})
 		return

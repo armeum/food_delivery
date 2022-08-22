@@ -34,7 +34,10 @@ func CreateUser(c *gin.Context) {
 
 	//Create user
 
-	user := models.User{FirstName: input.FirstName, PhoneNumber: input.PhoneNumber}
+	user := models.User{
+		FirstName: input.FirstName, 
+		PhoneNumber: input.PhoneNumber,
+	}
 	db := c.MustGet("db").(*gorm.DB)
 	db.Create(&user)
 

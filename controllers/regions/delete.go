@@ -13,14 +13,17 @@ func DeleteRegion(c *gin.Context) {
 
 	db := c.MustGet("db").(*gorm.DB)
 
-	if err := db.Where("id = ?", c.Param("id")).Find(&region).Error; err != nil {
+	if err := db.
+		Where("id = ?", c.Param("id")).
+		Find(&region).
+		Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Route DELETE:/region/:id not found",
-			"error": err.Error(),
+			"message":    "Route DELETE:/region/:id not found",
+			"error":      err.Error(),
 			"statusCode": http.StatusBadRequest,
 		})
 		return
-	} 
+	}
 
 	db.Delete(&region)
 	c.JSON(http.StatusOK, gin.H{"data": region})

@@ -32,14 +32,19 @@ func Login(c *gin.Context) {
 	//validate input
 	var input LoginBody
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
-	
+
 	//get model if exists
 	var user models.User
 	db := c.MustGet("db").(*gorm.DB)
-	if err := db.Where("phone_number = ?", input.PhoneNumber).First(&user).Error; err != nil {
+	if err := db.
+		Where("phone_number = ?", input.PhoneNumber).
+		First(&user).
+		Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route POST:/auth/login not found",
 			"error":      err.Error(),
@@ -47,7 +52,9 @@ func Login(c *gin.Context) {
 		})
 		return
 	} else {
-		c.JSON(http.StatusOK, gin.H{"Password successfully sent to the phone number": user.PhoneNumber})
+		c.JSON(http.StatusOK, gin.H{
+			"Password successfully sent to the phone number": user.PhoneNumber,
+		})
 	}
 
 	user.Password = RandomPassword()
@@ -67,7 +74,11 @@ func SmsSender(first_name string, phone string, password string) {
 	test(first_name, phone, password)
 	base_url := "https://api.telegram.org/bot"
 
-	values := map[string]string{"first_name": first_name, "phone": phone, "password": password}
+	values := map[string]string{
+		"first_name": first_name,
+		"phone":      phone,
+		"password":   password,
+	}
 	json_data, err := json.Marshal(values)
 	if err != nil {
 		log.Fatal(err)
@@ -124,7 +135,9 @@ func SignUp(c *gin.Context) {
 		return
 	}
 	// Create the user
-	db := database.SetupPostgres().Create(&models.User{PhoneNumber: body.PhoneNumber, Password: string(hash)})
+	db := database.
+		SetupPostgres().
+		Create(&models.User{PhoneNumber: body.PhoneNumber, Password: string(hash)})
 	if db.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Failed to create user",

@@ -23,7 +23,10 @@ func UpdateCategory(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	//Get model if exists
 	var category models.Category
-	if err := db.Where("id = ?", c.Param("id")).First(&category).Error; err != nil {
+	if err := db.
+		Where("id = ?", c.Param("id")).
+		First(&category).
+		Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Rout Patch:/products/:id not found",
 			"error":      err.Error(),

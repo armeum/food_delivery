@@ -15,7 +15,11 @@ func FindAll(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var restaurants []models.Restaurants
 
-	if err := db.Scopes(pagination.Paginate(c)).Order("name ASC").Find(&restaurants).Error; err != nil {
+	if err := db.
+		Scopes(pagination.Paginate(c)).
+		Order("name ASC").
+		Find(&restaurants).
+		Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/restaurants failed",
 			"error":      err.Error(),
@@ -34,7 +38,10 @@ func FindRestaurant(c *gin.Context) {
 
 	db := c.MustGet("db").(*gorm.DB)
 
-	if err := db.Where("id = ?", c.Param("id")).First(&restaurant).Error; err != nil {
+	if err := db.
+		Where("id = ?", c.Param("id")).
+		First(&restaurant).
+		Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/restaurant/:id failed",
 			"error":      err.Error(),

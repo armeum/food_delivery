@@ -34,7 +34,13 @@ func AddProduct(c *gin.Context) {
 		return
 	}
 	//Create product
-	product := models.Product{Title: input.Title, Description: input.Description, Price: input.Price, Image: input.Image, Prices: input.Prices, CategoryID: input.CategoryID, CategoryName: input.CategoryName}
+	product := models.Product{Title: input.Title,
+		Description:  input.Description,
+		Price:        input.Price,
+		Image:        input.Image,
+		Prices:       input.Prices,
+		CategoryID:   input.CategoryID,
+		CategoryName: input.CategoryName}
 	db.Create(&product)
 	c.JSON(http.StatusCreated, gin.H{"data": product})
 }

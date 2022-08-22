@@ -30,7 +30,12 @@ func AddRestaurant(c *gin.Context) {
 		return
 	}
 
-	restaurant := models.Restaurants{Name: input.Name, Description: input.Description, From: input.From, To: input.To}
+	restaurant := models.Restaurants{
+		Name:        input.Name,
+		Description: input.Description,
+		From:        input.From,
+		To:          input.To,
+	}
 	db.Create(&restaurant)
 	c.JSON(http.StatusCreated, gin.H{"data": restaurant})
 }

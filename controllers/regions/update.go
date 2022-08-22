@@ -27,14 +27,17 @@ func UpdateRegion(c *gin.Context) {
 		return
 	}
 
-	if err := db.Where("id = ?", c.Param("id")).First(&region).Error; err != nil {
+	if err := db.
+		Where("id = ?", c.Param("id")).
+		First(&region).
+		Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Route POST:/region/:id not found",
-			"error": err.Error(),
+			"message":    "Route POST:/region/:id not found",
+			"error":      err.Error(),
 			"statusCode": http.StatusBadRequest,
 		})
 		return
-	} 
+	}
 
 	var updateRegion models.Regions
 	updateRegion.Name = input.Name
