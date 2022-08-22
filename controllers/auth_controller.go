@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"food_delivery/database"
 	"headfirstgo/food_delivery/models"
 	"log"
 	"math/rand"
@@ -14,21 +13,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	"golang.org/x/crypto/bcrypt"
 )
-
-type SignUpSerializer struct {
-	PhoneNumber string `json:"phone_number"`
-	Password    string `json:"password"`
-	Password2   string `json:"password_2"`
-}
 
 type LoginBody struct {
 	FirstName   string `json:"first_name"`
 	PhoneNumber string `gorm:"typevarchar(5);unique_index" json:"phone_number"`
 }
 
-func Login(c *gin.Context) {
+ func Login(c *gin.Context) {
 	//validate input
 	var input LoginBody
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -37,29 +29,27 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
-
 	//get model if exists
 	var user models.User
 	db := c.MustGet("db").(*gorm.DB)
+	//user nil -> userni create qilasz, phone number, '', '', '',
 	if err := db.
 		Where("phone_number = ?", input.PhoneNumber).
-		First(&user).
-		Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message":    "Route POST:/auth/login not found",
-			"error":      err.Error(),
-			"statusCode": 404,
-		})
-		return
-	} else {
+		First(&user); err != nil {
+		user := models.User{
+			PhoneNumber: input.PhoneNumber,
+		}
+		db := c.MustGet("db").(*gorm.DB)
+		db.Create(&user)
+		user.Password = RandomPassword()
+		SmsSender(user.FirstName, user.PhoneNumber, user.Password)
 		c.JSON(http.StatusOK, gin.H{
-			"Password successfully sent to the phone number": user.PhoneNumber,
+			"Password successfully sent to the phone number": user.PhoneNumber, "password": user.Password,
 		})
+		db.Save(&user)
 	}
 
-	user.Password = RandomPassword()
-	SmsSender(user.FirstName, user.PhoneNumber, user.Password)
-	db.Model(&user).Updates(user)
+	db.Model(&user).Updates(&user)
 }
 
 // / Generating random four-digit password
@@ -109,41 +99,4 @@ func test(first_name string, phone string, password string) {
 	}
 	fmt.Println("response Status:", response.Status)
 	defer response.Body.Close()
-}
-
-func SignUp(c *gin.Context) {
-	// Get the phone_number/password off request body
-	var body SignUpSerializer
-	if c.ShouldBindJSON(&body) != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to read body",
-		})
-		return
-	}
-	if body.Password != body.Password2 {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "passwords are not equal to each other",
-		})
-		return
-	}
-	// Hash the password
-	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to hash password",
-		})
-		return
-	}
-	// Create the user
-	db := database.
-		SetupPostgres().
-		Create(&models.User{PhoneNumber: body.PhoneNumber, Password: string(hash)})
-	if db.Error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to create user",
-		})
-		return
-	}
-	// Respond
-	c.JSON(http.StatusCreated, gin.H{"message": "Created User"})
 }

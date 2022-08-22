@@ -29,6 +29,10 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.POST("/auth/verify", controllers.Verification)
 	// r.Use(middleware.Authentication())
 
+	
+	r.Use(middleware.Authentication())
+
+
 	//////products routes///////
 	r.GET("/products", products.FindProducts)
 	r.GET("/products/:id", products.FindProductById)
@@ -61,7 +65,6 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.DELETE("/region/:id", regions.DeleteRegion)
 
 
-	r.Use(middleware.Authentication())
 
 	////BASKET routes/////////
 	// r.GET("/basket/:id", basket.GetBasketById)

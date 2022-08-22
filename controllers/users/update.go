@@ -1,8 +1,10 @@
 package controllers
 
 import (
+	"fmt"
 	"headfirstgo/food_delivery/models"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -43,8 +45,21 @@ func UpdateUser(c *gin.Context) {
 			"statusCode": 404,
 		})
 		return
+		
 	}
 
+	fmt.Println(&user)
+
+	id_uint, err := strconv.ParseUint(c.Param("id"), 10, 64)
+
+	if user.ID != uint(id_uint) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message":    "Rout Patch:/users/:id not found",
+			"error":      err.Error(),
+			"statusCode": 403,
+		})
+		return
+	}
 	var updateInput models.User
 	updateInput.FirstName = input.FirstName
 	// updateInput.LastName = input.LastName
