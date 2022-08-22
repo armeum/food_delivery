@@ -12,9 +12,17 @@ type User struct {
 	FirstName string `json:"first_name" binding:"required"`
 	// LastName    string `json:"last_name"`
 	PhoneNumber string `gorm:"type:varchar(9);unique_index" json:"phone_number" binding:"required"`
-	Gender      string `json:"gender"`
+	Gender      GenderType `json:"gender" binding:"ENUM=GenderType"`
 	// Email       string `gorm:"typevarchar(100);unique_index" json:"email"`
 	DateOfBirth string `json:"date_of_birth"`
 	Password string   `json:"password" binding:"required"`
 	Basket   []Basket `gorm:"foreignKey:user_id" json:"basket"`
 }
+
+
+type GenderType string
+
+const (
+	Male GenderType = "мужской"
+	Female GenderType = "женский"
+)

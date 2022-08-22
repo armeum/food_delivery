@@ -13,12 +13,13 @@ import (
 
 type UpdateUserInput struct {
 	gorm.Model
-	FirstName   string    `json:"first_name"`
-	LastName    string    `json:"last_name"`
-	PhoneNumber string    `json:"phone_number"`
-	Email       string    `json:"email"`
-	DateOfBirth string    `json:"date_of_birth"`
-	CreatedAt   time.Time `json:"created_at"`
+	FirstName   string            `json:"first_name"`
+	LastName    string            `json:"last_name"`
+	PhoneNumber string            `json:"phone_number"`
+	Gender      models.GenderType `json:"gender"`
+	Email       string            `json:"email"`
+	DateOfBirth string            `json:"date_of_birth"`
+	CreatedAt   time.Time         `json:"created_at"`
 }
 
 func UpdateUser(c *gin.Context) {
@@ -45,7 +46,7 @@ func UpdateUser(c *gin.Context) {
 			"statusCode": 404,
 		})
 		return
-		
+
 	}
 
 	fmt.Println(&user)
@@ -64,8 +65,9 @@ func UpdateUser(c *gin.Context) {
 	updateInput.FirstName = input.FirstName
 	// updateInput.LastName = input.LastName
 	updateInput.PhoneNumber = input.PhoneNumber
+	updateInput.Gender = input.Gender
 	// updateInput.Email = input.Email
-	// updateInput.DateOfBirth = input.DateOfBirth
+	updateInput.DateOfBirth = input.DateOfBirth
 
 	db.Model(&user).Updates(updateInput)
 
