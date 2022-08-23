@@ -21,7 +21,6 @@ func DeleteAdmin(c *gin.Context) {
 		})
 		return
 	}
-
 	db.Delete(&admin)
 	c.JSON(http.StatusOK, gin.H{"data": admin})
 }
