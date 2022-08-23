@@ -51,6 +51,7 @@ func UpdateProduct(c *gin.Context) {
 	updateInput.Image = input.Image
 	updateInput.CategoryID = input.CategoryID
 	updateInput.CategoryName = input.CategoryName
+	updateInput.Prices = input.Prices
 
 	db.Model(&product).Updates(updateInput)
 	c.JSON(http.StatusOK, gin.H{"data": product})
