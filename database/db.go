@@ -15,7 +15,7 @@ const (
 	port     = "5432"
 	user     = "postgres"
 	password = "root"
-	dbname   = "nightwish"
+	dbname   = "food_delivery"
 )
 
 func SetupPostgres() *gorm.DB {
