@@ -27,9 +27,7 @@ func Routes(db *gorm.DB) *gin.Engine {
 	cfg.AllowAllOrigins = true
 	cfg.AllowHeaders = append(cfg.AllowHeaders, "*")
 	cfg.AllowCredentials = true
-	cfg.AllowOriginFunc = func(origin string) bool {
-		return true
-	}
+
 	r.Use(cors.New(cfg))
 
 	r.Use(func(ctx *gin.Context) {
