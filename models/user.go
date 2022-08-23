@@ -10,7 +10,6 @@ type User struct {
 	UpdatedAt time.Time
 	DeletedAt *time.Time
 	FirstName string `json:"first_name" binding:"required"`
-	// LastName    string `json:"last_name"`
 	PhoneNumber string `gorm:"type:varchar(9);unique_index" json:"phone_number" binding:"required"`
 	Gender      GenderType `json:"gender" binding:"ENUM=GenderType"`
 	// Email       string `gorm:"typevarchar(100);unique_index" json:"email"`

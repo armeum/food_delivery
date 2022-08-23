@@ -3,7 +3,6 @@ package controllers
 import (
 	"fmt"
 	"food_delivery/models"
-	"log"
 
 	"net/http"
 
@@ -15,22 +14,9 @@ func Basket(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var product models.Product
 
-	// var user_id = uint(c.GetInt("id"))
-
 	var basketItems []models.BasketItem
 	var basket models.Basket
 
-	myMap := make(map[string]string)
-	log.Println(myMap["product"])
-	basket_map := make(map[uint]string)
-	log.Println(basket_map[2])
-	basket_items := make(map[int]string)
-	log.Println(basket_items)
-
-	// if user_id == basket.ID {
-	// 	db.Where("id = ?", c.GetInt("id")).Find(&product)
-	// 	basketItems = append(basketItems)
-	// }
 	id := c.GetInt("id")
 	getProduct(c, uint(id))
 
@@ -54,8 +40,6 @@ func Basket(c *gin.Context) {
 			basketItems[index].Quantity++
 		}
 	}
-	fmt.Println(id)
-	fmt.Println(basketItems)
 
 	c.JSON(http.StatusOK, gin.H{"data": basketItems})
 }
@@ -66,7 +50,6 @@ func exists(id uint, basketItems []models.BasketItem) int {
 			return i
 		}
 	}
-
 	return 0
 }
 

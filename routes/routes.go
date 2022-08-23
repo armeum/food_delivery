@@ -63,11 +63,12 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.DELETE("/region/:id", regions.DeleteRegion)
 
 	////BASKET routes/////////
-	// r.GET("/basket/:id", basket.GetBasketById)
-	r.GET("/baskets/:user_id", basket.CheckUserBasket)
-	// r.PUT("/basket/:user_id", basket.UpdateBasket)
+	r.GET("/baskets", basket.GetBaskets)
+	r.GET("/basket", basket.CheckUserBasket)
+	r.GET("/active_baskets", basket.GetActiveBaskets)
 	r.PUT("/basket/:id", basket.Basket)
-	// r.POST("/basket", basket.AddBasket)
+	r.POST("/basket", basket.SaleBasket)
+	r.POST("/addItem", basket.AddItem)
 
 	//////////users routes///////////
 

@@ -13,7 +13,7 @@ var err error
 const (
 	host     = "localhost"
 	port     = "5432"
-	user     = "postgres"
+	user     = "postgres"	
 	password = "root"
 	dbname   = "food_delivery"
 )
@@ -34,7 +34,6 @@ func SetupPostgres() *gorm.DB {
 		log.Fatal(err)
 	}
 
-	db.Exec(`UPDATE "users" SET "deletedAt=null WHERE deletedAt IS NULL"`)
 	return db
 
 }

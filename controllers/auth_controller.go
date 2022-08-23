@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"food_delivery/models"
+	"food_delivery/pkg"
 	"log"
 	"math/rand"
 	"net/http"
@@ -41,6 +42,9 @@ func Login(c *gin.Context) {
 		}
 		db := c.MustGet("db").(*gorm.DB)
 		user.Password = RandomPassword()
+		newBasket := models.Basket{UserID: pkg.GetUserID(c)}
+		db.Create(&user)
+		db.Create(&newBasket)
 		db.Create(&user)
 		SmsSender(user.FirstName, user.PhoneNumber, user.Password)
 		c.JSON(http.StatusOK, gin.H{

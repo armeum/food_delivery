@@ -2,12 +2,23 @@ package controllers
 
 import (
 	"food_delivery/models"
+	"food_delivery/pkg"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
+
+type OrderItem struct {
+	ID        uint `json:"id"`
+	ProductID uint `json:"product_id"`
+	Quantity  uint `json:"quantity"`
+}
+
+type AddItem struct {
+	Items []*OrderItem `json:"items"`
+}
 
 type CreateUserInput struct {
 	gorm.Model
@@ -33,14 +44,16 @@ func CreateUser(c *gin.Context) {
 	}
 
 	//Create user
-
 	user := models.User{
 		FirstName:   input.FirstName,
 		PhoneNumber: input.PhoneNumber,
 		DateOfBirth: input.DateOfBirth,
 	}
+	newBasket := models.Basket{UserID: pkg.GetUserID(c)}
+
 	db := c.MustGet("db").(*gorm.DB)
 	db.Create(&user)
+	db.Create(&newBasket)
 
 	c.JSON(http.StatusCreated, gin.H{"data": user})
 

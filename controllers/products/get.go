@@ -84,6 +84,7 @@ func GetProductsExceptPizza(c *gin.Context) {
 	if err := db.
 		Where("category_id != ?", 1).
 		Order("category_id asc").
+		Preload("Prices.ProductPastry").
 		Find(&products).
 		Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
