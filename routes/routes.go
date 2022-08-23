@@ -20,7 +20,37 @@ import (
 
 func Routes(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
-	r.Use(cors.Default())
+	r.Use(cors.New(
+		cors.Config{
+			AllowOrigins: []string{"*"},
+			AllowHeaders: []string{
+				"Origin",
+				"Access-Control-Allow-Headers",
+				"Content-Type",
+				"Content-Length",
+				"Accept-Encoding",
+				"X-CSRF-Token",
+				"Authorization",
+				"accept",
+				"origin",
+				"Cache-Control",
+				"X-Requested-With",
+				"Allow-Control-Allow-Origin",
+			},
+
+			AllowMethods: []string{
+				"GET",
+				"POST",
+				"PUT",
+				"DELETE",
+			},
+			AllowCredentials: true,
+			ExposeHeaders:    []string{"Content-Length"},
+			AllowOriginFunc: func(origin string) bool {
+				return true
+			},
+		},
+	))
 	r.Use(func(ctx *gin.Context) {
 		ctx.Set("db", db)
 	})
