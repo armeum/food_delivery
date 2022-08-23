@@ -33,6 +33,8 @@ func SetupPostgres() *gorm.DB {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	db.Exec(`UPDATE "users" SET "deletedAt=null WHERE deletedAt IS NULL"`)
 	return db
 
 }
