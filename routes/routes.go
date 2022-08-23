@@ -24,6 +24,8 @@ func Routes(db *gorm.DB) *gin.Engine {
 		ctx.Set("db", db)
 	})
 
+
+
 	/////auth routes/////////
 	r.POST("/auth/login", controllers.Login)
 	r.POST("/auth/verify", controllers.Verification)
