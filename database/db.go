@@ -24,7 +24,6 @@ const (
 
 func SetupPostgres() *gorm.DB {
 	//Loading environment variables
-
 	// dialect := os.Getenv("DIALECT")
 	// host := os.Getenv("HOST")
 	// dbname := os.Getenv("NAME")
