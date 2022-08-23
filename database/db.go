@@ -11,11 +11,11 @@ var db *gorm.DB
 var err error
 
 const (
-	host     = "13.229.69.55"
+	host     = "localhost"
 	port     = "5432"
 	user     = "postgres"
 	password = "postgres"
-	dbname   = "foof_delivery"
+	dbname   = "food_delivery"
 )
 
 func SetupPostgres() *gorm.DB {
