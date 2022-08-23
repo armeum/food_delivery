@@ -14,13 +14,24 @@ import (
 	restaurants "food_delivery/controllers/restaurants"
 	users "food_delivery/controllers/users"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
 
 func Routes(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
-	r.Use(middleware.CORSMiddleware())
+
+	cfg := cors.DefaultConfig()
+
+	cfg.AllowAllOrigins = true
+	cfg.AllowHeaders = append(cfg.AllowHeaders, "*")
+	cfg.AllowCredentials = true
+	cfg.AllowOriginFunc = func(origin string) bool {
+		return true
+	}
+	r.Use(cors.New(cfg))
+
 	r.Use(func(ctx *gin.Context) {
 		fmt.Println("Starting")
 		ctx.Set("db", db)
