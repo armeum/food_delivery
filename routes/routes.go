@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"food_delivery/middleware"
 
 	controllers "food_delivery/controllers"
@@ -13,45 +14,15 @@ import (
 	restaurants "food_delivery/controllers/restaurants"
 	users "food_delivery/controllers/users"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
 
 func Routes(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
-	r.Use(cors.New(
-		cors.Config{
-			AllowOrigins: []string{"*"},
-			AllowHeaders: []string{
-				"Origin",
-				"Access-Control-Allow-Headers",
-				"Content-Type",
-				"Content-Length",
-				"Accept-Encoding",
-				"X-CSRF-Token",
-				"Authorization",
-				"accept",
-				"origin",
-				"Cache-Control",
-				"X-Requested-With",
-				"Allow-Control-Allow-Origin",
-			},
-
-			AllowMethods: []string{
-				"GET",
-				"POST",
-				"PUT",
-				"DELETE",
-			},
-			AllowCredentials: true,
-			ExposeHeaders:    []string{"Content-Length"},
-			AllowOriginFunc: func(origin string) bool {
-				return true
-			},
-		},
-	))
+	r.Use(middleware.CORSMiddleware())
 	r.Use(func(ctx *gin.Context) {
+		fmt.Println("Starting")
 		ctx.Set("db", db)
 	})
 
