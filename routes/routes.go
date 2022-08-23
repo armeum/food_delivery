@@ -25,7 +25,6 @@ func Routes(db *gorm.DB) *gin.Engine {
 	cfg := cors.DefaultConfig()
 
 	cfg.AllowAllOrigins = true
-	cfg.AllowHeaders = append(cfg.AllowHeaders, "*")
 	cfg.AllowCredentials = true
 
 	r.Use(cors.New(cfg))
