@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"food_delivery/tokens"
 	"net/http"
 
@@ -26,6 +27,9 @@ func Authentication() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+
+		fmt.Printf("%+v\n", claims)
+
 		c.Set("first_name", claims.FirstName)
 		c.Set("phone_number", claims.PhoneNumber)
 		c.Set("id", claims.ID)
