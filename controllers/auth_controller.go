@@ -33,10 +33,9 @@ func Login(c *gin.Context) {
 	var user models.User
 	db := c.MustGet("db").(*gorm.DB)
 	//user nil -> userni create qilasz, phone number, '', '', '',
-	if err := db.
-		Where("phone_number = ?", input.PhoneNumber).
-		First(&user); err != nil {
-		fmt.Printf("\n%+v\n", err)
+	db.Where("phone_number = ?", input.PhoneNumber).First(&user)
+	if user.PhoneNumber == "" {
+		fmt.Printf("\n%+v\n", user)
 		user := models.User{
 			PhoneNumber: input.PhoneNumber,
 		}
@@ -48,9 +47,19 @@ func Login(c *gin.Context) {
 			"Password successfully sent to the phone number": user.PhoneNumber,
 		})
 		db.Save(&user)
+		return
 	}
 
+	user.Password = RandomPassword()
+	SmsSender(user.FirstName, user.PhoneNumber, user.Password)
+
+	fmt.Printf("\n%+v\n", user)
+
 	db.Model(&user).Updates(&user)
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Created",
+	})
 }
 
 // / Generating random four-digit password
@@ -100,4 +109,8 @@ func test(first_name string, phone string, password string) {
 	}
 	fmt.Println("response Status:", response.Status)
 	defer response.Body.Close()
+}
+
+func Logout(c *gin.Context) {
+
 }
