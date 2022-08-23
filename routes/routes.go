@@ -13,18 +13,17 @@ import (
 	restaurants "food_delivery/controllers/restaurants"
 	users "food_delivery/controllers/users"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
 
 func Routes(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
-	r.Use(middleware.CORSMiddleware())
+	r.Use(cors.Default())
 	r.Use(func(ctx *gin.Context) {
 		ctx.Set("db", db)
 	})
-
-
 
 	/////auth routes/////////
 	r.POST("/auth/login", controllers.Login)
