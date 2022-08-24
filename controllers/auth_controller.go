@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"food_delivery/config"
 	"food_delivery/models"
 	"food_delivery/pkg"
 	"log"
@@ -42,10 +43,10 @@ func Login(c *gin.Context) {
 		}
 		db := c.MustGet("db").(*gorm.DB)
 		user.Password = RandomPassword()
-		newBasket := models.Basket{UserID: pkg.GetUserID(c)}
+
+		newBasket := models.Basket{UserID: pkg.GetUserID(c), Status: config.BasketActiveStatus}
 		db.Create(&user)
 		db.Create(&newBasket)
-		db.Create(&user)
 		SmsSender(user.FirstName, user.PhoneNumber, user.Password)
 		c.JSON(http.StatusOK, gin.H{
 			"Password successfully sent to the phone number": user.PhoneNumber,

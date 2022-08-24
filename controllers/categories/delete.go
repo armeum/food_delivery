@@ -12,10 +12,11 @@ func DeleteCategory(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	///get model if exists
 	var category models.Category
-	if err := db.
-		Where("id = ?", c.Param("id")).
-		Find(&category).
-		Error; err != nil {
+	var product models.Product
+
+	var categoryID string = c.Param("id")
+
+	if err := db.Where("id = ?", categoryID).Preload("Product").Delete(&category).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/products/:id not found",
 			"error":      err.Error(),
@@ -23,7 +24,15 @@ func DeleteCategory(c *gin.Context) {
 		})
 		return
 	}
-	db.Delete(&category)
+
+	if err := db.Where("category_id = ?", categoryID).Delete(&product).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":      err.Error(),
+			"statusCode": 404,
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{"data": category})
 
-}
+}	

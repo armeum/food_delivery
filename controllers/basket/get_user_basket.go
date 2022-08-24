@@ -19,7 +19,7 @@ func CheckUserBasket(c *gin.Context) {
 	if err := db.Where("user_id = ? and status = ?", pkg.GetUserID(c), config.BasketActiveStatus).Find(&basket).Error; err != nil {
 		newBasket := models.Basket{UserID: pkg.GetUserID(c), TotalPrice: 0}
 		db.Create(&newBasket)
-		newBasket.Item = []models.BasketItem{}
+		newBasket.Item = []*models.BasketItem{}
 		c.JSON(http.StatusOK, gin.H{
 			"data": newBasket,
 		})
@@ -31,7 +31,7 @@ func CheckUserBasket(c *gin.Context) {
 
 func GetBaskets(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
-	if err := db.Find(&baskets).Error; err != nil {
+	if err := db.Preload("Item").Find(&baskets).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
@@ -44,7 +44,7 @@ func GetBaskets(c *gin.Context) {
 
 func GetActiveBaskets(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
-	if err := db.Where("id = ?  and status = ?", pkg.GetUserID(c), config.BasketActiveStatus).Find(&baskets).Error; err != nil {
+	if err := db.Where("user_id = ?  and status = ?", pkg.GetUserID(c), config.BasketActiveStatus).Find(&baskets).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":      err.Error(),
 			"statusCode": http.StatusBadRequest,

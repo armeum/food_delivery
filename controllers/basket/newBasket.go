@@ -24,16 +24,16 @@ func Basket(c *gin.Context) {
 
 	if basketItems == nil {
 		basketItems = append(basketItems, models.BasketItem{
-			BasketID:  basket.ID,
-			ProductID: product.ID,
-			Quantity:  1,
+			BasketID: basket.ID,
+			Quantity: 1,
 		})
+
 	} else {
 		index := exists(product.ID, basketItems)
 		if index == 0 {
 			basketItems = append(basketItems, models.BasketItem{
 				BasketID:  basket.ID,
-				ProductID: product.ID,
+				// ProductID: product.ID,
 				Quantity:  1,
 			})
 		} else {
