@@ -39,6 +39,11 @@ func AddItem(c *gin.Context) {
 		return
 	}
 
+	if basket.ID == 0 {
+		basket.UserID = pkg.GetUserID(c)
+		db.Create(basket)
+	}
+
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),

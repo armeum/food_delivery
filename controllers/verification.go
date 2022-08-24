@@ -58,7 +58,7 @@ func Verification(c *gin.Context) {
 			})
 		}
 
-		c.JSON(http.StatusOK, gin.H{"password": user.Password, "basket": user.Basket, "phone_number": user.PhoneNumber, "id": user.ID, "first_name": user.FirstName, "acces_token": signedToken})
+		c.JSON(http.StatusOK, gin.H{"password": user.Password, "basket": user.Basket, "phone_number": user.PhoneNumber, "id": user.ID, "first_name": user.FirstName, "access_token": signedToken})
 	} else if input.Password != user.Password {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "something went wrong",

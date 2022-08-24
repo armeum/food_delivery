@@ -44,7 +44,7 @@ func GetBaskets(c *gin.Context) {
 
 func GetActiveBaskets(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
-	if err := db.Where("status = ?", config.BasketActiveStatus).Find(&baskets).Error; err != nil {
+	if err := db.Where("id = ?  and status = ?", pkg.GetUserID(c), config.BasketActiveStatus).Find(&baskets).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":      err.Error(),
 			"statusCode": http.StatusBadRequest,
