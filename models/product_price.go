@@ -13,8 +13,8 @@ type ProductPrice struct {
 type SizeType string
 
 const (
-	Small  SizeType = "small"
-	Medium SizeType = "medium"
-	Big    SizeType = "big"
+	Small  SizeType = "Маленький"
+	Medium SizeType = "Средний"
+	Big    SizeType = "Большой"
 )
 

@@ -13,8 +13,8 @@ type ProductPastryType struct {
 type PastryType string
 
 const (
-	Thin         PastryType = "thin"
-	Thick        PastryType = "thick"
-	Hot_Dog_Bort PastryType = "hot_dog_bort"
+	Thin         PastryType = "Тонкий"
+	Thick        PastryType = "Воздушный"
+	Hot_Dog_Bort PastryType = "Хот-Дог-Борт"
 )
 
