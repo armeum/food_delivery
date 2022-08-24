@@ -35,7 +35,7 @@ func Login(c *gin.Context) {
 	var user models.User
 	db := c.MustGet("db").(*gorm.DB)
 	//user nil -> userni create qilasz, phone number, '', '', '',
-	db.Where("phone_number = ?", input.PhoneNumber).First(&user)
+	db.Where("phone_number = ?", input.PhoneNumber).Preload("Basket").First(&user)
 	if user.PhoneNumber == "" {
 		fmt.Printf("\n%+v\n", user)
 		user := models.User{

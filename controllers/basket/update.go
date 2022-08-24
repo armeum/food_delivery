@@ -55,19 +55,15 @@ func AddItem(c *gin.Context) {
 
 	if basket.ID == 0 {
 		basket.UserID = pkg.GetUserID(c)
-
 		basket.Item = makeBasketItems(input.Items)
-
 		fmt.Printf("Basket: %+v\n", basket)
 		err := db.Create(basket).Error
-
 		if err != nil {
 			log.Println(err)
 		}
 		c.JSON(http.StatusOK, gin.H{"message": "saved"})
 		return
 	}
-
 	basket.Item = makeBasketItems(input.Items)
 	db.Save(&basket)
 	c.JSON(http.StatusOK, gin.H{"message": "saved"})

@@ -29,7 +29,6 @@ func SaleBasket(c *gin.Context) {
 	}
 
 	basket.Status = config.BasketSoldStatus
-
 	db.Save(&basket)
 
 	newBasket := models.Basket{UserID: pkg.GetUserID(c), TotalPrice: 0}
@@ -38,5 +37,3 @@ func SaleBasket(c *gin.Context) {
 		"message": "cerated",
 	})
 }
-
-
