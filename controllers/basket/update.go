@@ -20,7 +20,7 @@ type UpdateBasketInput struct {
 }
 
 type Item struct {
-	ProductID uint `json:"product_id" binding:"required"`
+	ProductID uint `gorm:"foreignKey:id" json:"product_id" binding:"required"`
 	Quantity  int  `json:"quantity" binding:"required"`
 }
 
@@ -39,11 +39,11 @@ func AddItem(c *gin.Context) {
 		return
 	}
 
-	log.Println(input)
+	log.Println(input, "input")
 	db := c.MustGet("db").(*gorm.DB)
 	basket, err := userBasket(pkg.GetUserID(c), db)
 	if err != nil && err != gorm.ErrRecordNotFound {
-		log.Println(err)
+		log.Println(err, "err")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/getAllCategories not found",
 			"error":      "Record not found",
@@ -51,28 +51,48 @@ func AddItem(c *gin.Context) {
 		})
 		return
 	}
-	log.Println(basket)
+	log.Println(basket, "basket")
+	log.Println(pkg.GetUserID(c), "id")
 
 	if basket.ID == 0 {
 		basket.UserID = pkg.GetUserID(c)
-		basket.Item = makeBasketItems(input.Items)
-		fmt.Printf("Basket: %+v\n", basket)
-		err := db.Create(basket).Error
+		basket.Status = config.BasketActiveStatus
+		err := db.Create(&basket).Error
 		if err != nil {
 			log.Println(err)
 		}
-		c.JSON(http.StatusOK, gin.H{"message": "saved"})
-		return
 	}
+
+	basket.TotalPrice = 0
+
+	for _, item := range input.Items {
+		var product models.Product
+		if err := db.Where("id = ?", item.ProductID).Preload("Prices.ProductPastry").First(&product).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"err": err.Error(),
+			})
+			return
+		}
+
+		fmt.Printf("Product: %+v\n", product)
+
+		basket.TotalPrice += product.Price * item.Quantity
+
+	}
+
+	fmt.Printf("Basket: %+v\n", basket)
+
+	db.Where("basket_id = ?", basket.ID).Delete(&models.BasketItem{})
+
 	basket.Item = makeBasketItems(input.Items)
 	db.Save(&basket)
-	c.JSON(http.StatusOK, gin.H{"message": "saved"})
+	c.JSON(http.StatusOK, gin.H{"message": "item is added", "total_price": basket.TotalPrice})
 }
 
 func userBasket(userId uint, db *gorm.DB) (*models.Basket, error) {
 
 	var basket models.Basket
-	err := db.Where("user_id = ? and status = ?", userId, config.BasketActiveStatus).Find(&basket).Error
+	err := db.Where("user_id = ? and status = ?", userId, config.BasketActiveStatus).Preload("Item.Product.Prices.ProductPastry").Find(&basket).Error
 
 	return &basket, err
 }
@@ -81,12 +101,13 @@ func makeBasketItems(items []*Item) []*models.BasketItem {
 	var basketItems []*models.BasketItem = make([]*models.BasketItem, 0)
 
 	for _, item := range items {
-		log.Println(item)
+		log.Println(item, "item")
 		basketItem := models.BasketItem{
 			Quantity: uint(item.Quantity),
 		}
-		basketItem.Product.ID = item.ProductID
+		basketItem.ProductID = item.ProductID
 		basketItems = append(basketItems, &basketItem)
+
 	}
 
 	return basketItems

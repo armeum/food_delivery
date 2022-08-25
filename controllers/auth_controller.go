@@ -116,6 +116,3 @@ func test(first_name string, phone string, password string) {
 	defer response.Body.Close()
 }
 
-func Logout(c *gin.Context) {
-
-}

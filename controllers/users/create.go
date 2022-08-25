@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"food_delivery/config"
 	"food_delivery/models"
 	"food_delivery/pkg"
 	"net/http"
@@ -49,7 +50,7 @@ func CreateUser(c *gin.Context) {
 		PhoneNumber: input.PhoneNumber,
 		DateOfBirth: input.DateOfBirth,
 	}
-	newBasket := models.Basket{UserID: pkg.GetUserID(c)}
+	newBasket := models.Basket{UserID: pkg.GetUserID(c), Status: config.BasketActiveStatus}
 
 	db := c.MustGet("db").(*gorm.DB)
 	db.Create(&user)

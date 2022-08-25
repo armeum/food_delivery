@@ -39,7 +39,7 @@ func GetCategoryById(c *gin.Context) {
 
 	if err := db.
 		Where("id = ?", c.Param("id")).
-		Preload("Product", "category_id = ?", c.Param("id")).
+		Preload("Product.Prices", "category_id = ?", c.Param("id")).
 		First(&categories).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/getCategories not found",

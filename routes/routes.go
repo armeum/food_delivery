@@ -76,7 +76,6 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.GET("/baskets", basket.GetBaskets)
 	r.GET("/basket", basket.CheckUserBasket)
 	r.GET("/active_baskets", basket.GetActiveBaskets)
-	r.PUT("/basket/:id", basket.Basket)
 	r.POST("/basket", basket.SaleBasket)
 	r.POST("/addItem", basket.AddItem)
 

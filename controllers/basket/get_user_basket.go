@@ -4,13 +4,12 @@ import (
 	"food_delivery/config"
 	"food_delivery/models"
 	"food_delivery/pkg"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
-
-var baskets []models.Basket
 
 func CheckUserBasket(c *gin.Context) {
 	var basket models.Basket
@@ -30,6 +29,8 @@ func CheckUserBasket(c *gin.Context) {
 }
 
 func GetBaskets(c *gin.Context) {
+	var baskets []*models.Basket
+
 	db := c.MustGet("db").(*gorm.DB)
 	if err := db.Preload("Item").Find(&baskets).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -43,15 +44,29 @@ func GetBaskets(c *gin.Context) {
 }
 
 func GetActiveBaskets(c *gin.Context) {
+	var basket models.Basket
+	var items []*models.BasketItem
+
 	db := c.MustGet("db").(*gorm.DB)
-	if err := db.Where("user_id = ?  and status = ?", pkg.GetUserID(c), config.BasketActiveStatus).Find(&baskets).Error; err != nil {
+	if err := db.Where("user_id = ?  and status = ?", pkg.GetUserID(c), config.BasketActiveStatus).Find(&basket).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":      err.Error(),
 			"statusCode": http.StatusBadRequest,
 		})
 		return
 	}
+
+	if err := db.Preload("Product.Prices.ProductPastry").Find(&items).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":      err.Error(),
+			"statusCode": http.StatusBadRequest,
+		})
+		return
+	}
+
+	basket.Item = items
+	log.Println(basket)
 	c.JSON(http.StatusOK, gin.H{
-		"data": baskets,
+		"data": basket,
 	})
 }

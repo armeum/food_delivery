@@ -12,7 +12,7 @@ type AddProductInput struct {
 	gorm.Model
 	Title        string                `gorm:"column:title" json:"title"`
 	Description  string                `gorm:"column:description" json:"description"`
-	Price        uint                  `gorm:"column:price"`
+	Price        int                  `gorm:"column:price"`
 	Image        string                `gorm:"column:image" json:"image"`
 	Prices       []models.ProductPrice `gorm:"column:prices;foreignKey:product_id" json:"prices"`
 	CategoryID   int                   `gorm:"column:category_id;foreignKey:product_id" json:"category_id"`
