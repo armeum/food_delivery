@@ -54,6 +54,7 @@ func Login(c *gin.Context) {
 		newBasket := models.Basket{UserID: pkg.GetUserID(c), Status: config.BasketActiveStatus}
 		// db.Create(&user)
 		db.Create(&newBasket)
+		db.Save(&newBasket)
 		db.Save(&user)
 		return
 	}

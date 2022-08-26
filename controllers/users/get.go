@@ -38,7 +38,7 @@ func FindUser(c *gin.Context) {
 	var user models.User
 	db := c.MustGet("db").(*gorm.DB)
 	if err := db.
-		Where("id = ?", c.Param("id")).Preload("Basket.Item.Product.Prices.ProductPastry").First(&user).Error; err != nil {
+		Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"message":    "Route GET:/users/:id not found",
 			"error":      err.Error(),

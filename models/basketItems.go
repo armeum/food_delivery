@@ -15,5 +15,4 @@ func (items *BasketItem) TableName() string {
 	return "items"
 }
 
-
 // `gorm:"column:product_id;foreignKey:product_id" json:"product_id"`
