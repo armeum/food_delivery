@@ -78,6 +78,8 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.GET("/active_baskets", basket.GetActiveBaskets)
 	r.POST("/basket", basket.SaleBasket)
 	r.POST("/addItem", basket.AddItem)
+	r.POST("/")
+	
 
 	//////////users routes///////////
 

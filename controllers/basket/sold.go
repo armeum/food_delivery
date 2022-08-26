@@ -21,6 +21,8 @@ func SaleBasket(c *gin.Context) {
 		return
 	}
 
+	db.Where("basket_id = ?", basket.ID).Delete(&models.BasketItem{})
+
 	if len(basket.Item) == 0 {
 		c.JSON(http.StatusNotFound, gin.H{
 			"message": "Empty basket",

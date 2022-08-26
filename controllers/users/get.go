@@ -18,7 +18,7 @@ func FindUsers(c *gin.Context) {
 	if err := db.
 		Scopes(pagination.Paginate(c)).
 		Order("created_at ASC").
-		Preload("Basket.Item.Product.Prices.ProductPastry").
+		// Preload("Basket.Item.Product.Prices.ProductPastry").
 		Find(&users).
 		Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

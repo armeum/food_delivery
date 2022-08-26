@@ -78,9 +78,9 @@ func AddItem(c *gin.Context) {
 			})
 			return
 		}
+		
 		fmt.Println(product, "narx")
 			if item.SizeType !="" {
-				fmt.Println("scsasacascsacascssasacaascsaa", product.ID, product.Price)
 				if err := db.Where("product_id = ? and size_type=? ", product.ID, item.SizeType).Find(&productSizePrices).Error; err != nil {
 					c.JSON(http.StatusBadRequest, gin.H{
 						"err": err.Error(),
@@ -97,10 +97,13 @@ func AddItem(c *gin.Context) {
 					return
 				}
 
-				fmt.Println("Productn", productPastryPrice.Price)
+				fmt.Println("Product", productPastryPrice.Price)
 
 				basket.TotalPrice += productPastryPrice.Price * item.Quantity
 				fmt.Println(basket.TotalPrice, "Total", product.Price)
+				c.JSON(http.StatusOK, gin.H{"message": "item is added", "total_price": basket.TotalPrice})
+
+
 			} else {
 				basket.TotalPrice += product.Price * item.Quantity
 			}
