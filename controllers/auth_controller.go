@@ -35,7 +35,7 @@ func Login(c *gin.Context) {
 	var user models.User
 	db := c.MustGet("db").(*gorm.DB)
 	//user nil -> userni create qilasz, phone number, '', '', '',
-	db.Where("phone_number = ?", input.PhoneNumber).Preload("Basket").First(&user)
+	db.Where("phone_number = ?", input.PhoneNumber).First(&user)
 	if user.PhoneNumber == "" {
 		fmt.Printf("\n%+v\n", user)
 		user := models.User{
@@ -43,14 +43,17 @@ func Login(c *gin.Context) {
 		}
 		db := c.MustGet("db").(*gorm.DB)
 		user.Password = RandomPassword()
-
-		newBasket := models.Basket{UserID: pkg.GetUserID(c), Status: config.BasketActiveStatus}
 		db.Create(&user)
-		db.Create(&newBasket)
+		// newBasket := models.Basket{UserID: pkg.GetUserID(c), Status: config.BasketActiveStatus}
+		// // db.Create(&user)
+		// db.Create(&newBasket)
 		SmsSender(user.FirstName, user.PhoneNumber, user.Password)
 		c.JSON(http.StatusOK, gin.H{
 			"Password successfully sent to the phone number": user.PhoneNumber,
 		})
+		newBasket := models.Basket{UserID: pkg.GetUserID(c), Status: config.BasketActiveStatus}
+		// db.Create(&user)
+		db.Create(&newBasket)
 		db.Save(&user)
 		return
 	}

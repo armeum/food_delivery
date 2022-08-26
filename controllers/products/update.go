@@ -58,7 +58,6 @@ func UpdateProduct(c *gin.Context) {
 	}
 
 	/////Updating ProductInputs
-
 	product.Title = productInput.Title
 	product.Description = productInput.Description
 	product.Price = productInput.Price

@@ -16,5 +16,6 @@ const (
 	Small  SizeType = "Маленький"
 	Medium SizeType = "Средний"
 	Big    SizeType = "Большой"
+	
 )
 

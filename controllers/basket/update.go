@@ -20,8 +20,10 @@ type UpdateBasketInput struct {
 }
 
 type Item struct {
-	ProductID uint `gorm:"foreignKey:id" json:"product_id" binding:"required"`
-	Quantity  int  `json:"quantity" binding:"required"`
+	ProductID  uint   `gorm:"foreignKey:id" json:"product_id" binding:"required"`
+	Quantity   int    `json:"quantity" binding:"required"`
+	SizeType   string `json:"size_type"`
+	PastryType string `json:"pastry_type"`
 }
 
 type UpdateBasketItemInput struct {
@@ -67,20 +69,46 @@ func AddItem(c *gin.Context) {
 
 	for _, item := range input.Items {
 		var product models.Product
+		var productSizePrices models.ProductPrice
+		var productPastryPrice models.ProductPastryType
+
 		if err := db.Where("id = ?", item.ProductID).Preload("Prices.ProductPastry").First(&product).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"err": err.Error(),
 			})
 			return
 		}
+		fmt.Println(product, "narx")
+			if item.SizeType !="" {
+				fmt.Println("scsasacascsacascssasacaascsaa", product.ID, product.Price)
+				if err := db.Where("product_id = ? and size_type=? ", product.ID, item.SizeType).Find(&productSizePrices).Error; err != nil {
+					c.JSON(http.StatusBadRequest, gin.H{
+						"err": err.Error(),
+					})
+					fmt.Println("size")
+					return
+				}
 
-		fmt.Printf("Product: %+v\n", product)
+				if err := db.Where("size_type_id = ? and pastry_type = ?", productSizePrices.ID, item.PastryType).Find(&productPastryPrice).Error; err != nil {
+					c.JSON(http.StatusBadRequest, gin.H{
+						"err": err.Error(),
+					})
+					fmt.Println("size price")
+					return
+				}
 
-		basket.TotalPrice += product.Price * item.Quantity
+				fmt.Println("Productn", productPastryPrice.Price)
 
-	}
+				basket.TotalPrice += productPastryPrice.Price * item.Quantity
+				fmt.Println(basket.TotalPrice, "Total", product.Price)
+			} else {
+				basket.TotalPrice += product.Price * item.Quantity
+			}
+		}
+		fmt.Println(basket.TotalPrice, "BigTotal")
 
-	fmt.Printf("Basket: %+v\n", basket)
+
+	// fmt.Printf("Basket: %+v\n", basket)
 
 	db.Where("basket_id = ?", basket.ID).Delete(&models.BasketItem{})
 
@@ -107,9 +135,8 @@ func makeBasketItems(items []*Item) []*models.BasketItem {
 		}
 		basketItem.ProductID = item.ProductID
 		basketItems = append(basketItems, &basketItem)
-
 	}
-
+	// fmt.Println(basketItems, "basketItems")
 	return basketItems
 
 }

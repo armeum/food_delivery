@@ -56,7 +56,7 @@ func GetActiveBaskets(c *gin.Context) {
 		return
 	}
 
-	if err := db.Preload("Product.Prices.ProductPastry").Find(&items).Error; err != nil {
+	if err := db.Where("basket_id = ?", basket.ID).Preload("Product.Prices.ProductPastry").Find(&items).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":      err.Error(),
 			"statusCode": http.StatusBadRequest,

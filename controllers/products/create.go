@@ -40,7 +40,8 @@ func AddProduct(c *gin.Context) {
 		Image:        input.Image,
 		Prices:       input.Prices,
 		CategoryID:   input.CategoryID,
-		CategoryName: input.CategoryName}
+		CategoryName: input.CategoryName,
+	}
 	db.Create(&product)
 	c.JSON(http.StatusCreated, gin.H{"data": product})
 }
