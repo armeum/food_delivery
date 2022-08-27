@@ -12,11 +12,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
+
 type Item struct {
-	ProductID  uint   `gorm:"foreignKey:id" json:"product_id" binding:"required"`
-	Quantity   int    `json:"quantity" binding:"required"`
-	SizeType   string `json:"size_type"`
-	PastryType string `json:"pastry_type"`
+	ProductID    uint `gorm:"foreignKey:id" json:"product_id" binding:"required"`
+	Quantity     int  `json:"quantity" binding:"required"`
+	SizeTypeID   uint `gorm:"foreignKey:id" json:"size_type_id"`
+	PastryTypeID uint `gorm:"foreignKey:id" json:"pastry_type_id"`
 }
 
 type UpdateBasketItemInput struct {
@@ -57,7 +58,9 @@ func AddItem(c *gin.Context) {
 			log.Println(err)
 		}
 	}
+
 	basket.TotalPrice = 0
+
 	for _, item := range input.Items {
 		var product models.Product
 		var productSizePrices models.ProductPrice
@@ -69,8 +72,8 @@ func AddItem(c *gin.Context) {
 			})
 			return
 		}
-		if item.SizeType != "" {
-			if err := db.Where("product_id = ? and size_type=? ", product.ID, item.SizeType).Find(&productSizePrices).Error; err != nil {
+		if item.SizeTypeID != 0 && item.PastryTypeID != 0 {
+			if err := db.Where("product_id = ? and id=? ", product.ID, item.SizeTypeID).Find(&productSizePrices).Error; err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{
 					"err": err.Error(),
 				})
@@ -78,43 +81,37 @@ func AddItem(c *gin.Context) {
 				return
 			}
 
-			if err := db.Where("size_type_id = ? and pastry_type = ?", productSizePrices.ID, item.PastryType).Find(&productPastryPrice).Error; err != nil {
+			if err := db.Where("size_type_id = ? and id = ?", productSizePrices.ID, item.PastryTypeID).Find(&productPastryPrice).Error; err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{
 					"err": err.Error(),
 				})
 				fmt.Println("size price")
 				return
 			}
-			basket.TotalPrice += productPastryPrice.Price * item.Quantity
-			if err := db.Where("id = ?", basket.ID).Preload("Item.Product.Prices", "size_type = ?", item.SizeType).Preload("Item.Product.Prices.ProductPastry", "pastry_type = ?", item.PastryType).Find(&basket).Error; err != nil {
+
+			if err := db.Where("id = ?", basket.ID).Preload("Item.Product.Prices", "size_type = ?", item.SizeTypeID).Preload("Item.Product.Prices.ProductPastry", "pastry_type = ?", item.PastryTypeID).Find(&basket).Error; err != nil {
 				log.Println(err, "err")
 				c.JSON(http.StatusBadRequest, gin.H{
 					"message":    "Route GET:/getAllCategories not found",
 					"error":      "Record not found",
 					"statusCode": 404,
 				})
+
 				return
 			}
+			basket.TotalPrice += productPastryPrice.Price * item.Quantity
+			fmt.Println(basket.TotalPrice, "total_price!")
 		} else {
-			basket.TotalPrice += product.Price * item.Quantity
-
-		}
-
-		db.Where("basket_id = ?", basket.ID).Delete(&models.BasketItem{})
-		basket.Item = makeBasketItems(input.Items)
-		db.Save(&basket)
-		if err := db.Where("id = ?", basket.ID).Preload("Item.Product.Prices", "size_type = ?", item.SizeType).Preload("Item.Product.Prices.ProductPastry", "pastry_type = ?", item.PastryType).Find(&basket).Error; err != nil {
-			log.Println(err, "err")
-			c.JSON(http.StatusBadRequest, gin.H{
-				"message":    "Route GET:/getAllCategories not found",
-				"error":      "Record not found",
-				"statusCode": 404,
-			})
-			return
-		}
-		
-		c.JSON(http.StatusOK, gin.H{"data": basket, "total_price": basket.TotalPrice})
+		basket.TotalPrice += product.Price * item.Quantity
+		fmt.Println(basket.TotalPrice, "total_price")
+}
 	}
+
+	basket.Item = makeBasketItems(input.Items)
+	db.Where("basket_id = ?", basket.ID).Delete(&models.BasketItem{})
+	db.Save(&basket)
+
+	c.JSON(http.StatusOK, gin.H{"message": basket, "total_price": basket.TotalPrice})
 }
 
 func userBasket(userId uint, db *gorm.DB) (*models.Basket, error) {
@@ -133,9 +130,14 @@ func makeBasketItems(items []*Item) []*models.BasketItem {
 		basketItem := models.BasketItem{
 			Quantity: uint(item.Quantity),
 		}
+
 		basketItem.ProductID = item.ProductID
+		basketItem.SizeTypeID = item.SizeTypeID
+		basketItem.PastryTypeID = item.PastryTypeID
+
 		basketItems = append(basketItems, &basketItem)
 	}
+
 	return basketItems
 
 }

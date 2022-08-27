@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"food_delivery/config"
 	"food_delivery/models"
 	"food_delivery/pkg"
@@ -48,39 +49,86 @@ func GetActiveBaskets(c *gin.Context) {
 	var items []*models.BasketItem
 
 	db := c.MustGet("db").(*gorm.DB)
+	fmt.Println("active_baskets")
+
 	if err := db.Where("user_id = ?  and status = ?", pkg.GetUserID(c), config.BasketActiveStatus).Find(&basket).Error; err != nil {
 
 		newBasket := models.Basket{UserID: pkg.GetUserID(c), TotalPrice: 0}
-		db.Create(&newBasket)
+		// db.Create(&newBasket)
 		newBasket.Item = []*models.BasketItem{}
 		c.JSON(http.StatusOK, gin.H{
 			"data": newBasket,
 		})
+
 		return
-		
-		// c.JSON(http.StatusBadRequest, gin.H{
-		// 	"error":      err.Error(),
-		// 	"statusCode": http.StatusBadRequest,
-		// })
-		// return
 	}
 
-	// var result []*models.BasketItem
-	// db.Raw("SELECT quantity FROM items WHERE basket_id = ?", 4).Scan(&result)
+	// if err := db.Where("basket_id = ?", basket.ID).Preload("Product.Prices.ProductPastry").Find(&items).Error; err != nil {
+	// 	c.JSON(http.StatusBadRequest, gin.H{
+	// 		"error":      err.Error(),
+	// 		"statusCode": http.StatusBadRequest,
+	// 	})
+	// 	return
+	// }
 
-	if err := db.Where("basket_id = ?", basket.ID).
-		Preload("Product.Prices.ProductPastry").
-		// Preload("Product.Prices.ProductPastry").
-		Find(&items).
-		Error; err != nil {
+	if err := db.Where("basket_id = ?", basket.ID).Preload("Product").Find(&items).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":      err.Error(),
 			"statusCode": http.StatusBadRequest,
 		})
+
 		return
+
 	}
 
-	// basket.Item = result
+	for _, item := range items {
+		fmt.Println(item.SizeTypeID, "size_type_id")
+		if item.SizeTypeID != 0 {
+			fmt.Printf("item: %+v\n", item)
+
+			var productPrice models.ProductPrice
+			if err := db.Where("id = ? and product_id = ?", item.SizeTypeID, item.ProductID).Find(&productPrice).Error; err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{
+					"error":      err.Error(),
+					"statusCode": http.StatusBadRequest,
+				})
+
+				fmt.Println(item.SizeTypeID, "size_type_id")
+				return
+
+			}
+
+			if item.PastryTypeID != 0 {
+				var productPastry []models.ProductPastryType
+				if err := db.Where("id =? and size_type_id =?", item.PastryTypeID, item.SizeTypeID).Find(&productPastry).Error; err != nil {
+					c.JSON(http.StatusBadRequest, gin.H{
+						"error":      err.Error(),
+						"statusCode": http.StatusBadRequest,
+					})
+
+					fmt.Println(item.PastryTypeID, "pastry_id")
+					return
+				}
+
+				productPrice.ProductPastry = productPastry
+			}
+
+			fmt.Println(productPrice, "product_price")
+			item.Product.Prices = append(item.Product.Prices, productPrice)
+		}
+
+		if err := db.Where("id = ?", basket.ID).Preload("Item.Product.Prices", "size_type = ?", item.SizeTypeID).Preload("Item.Product.Prices.ProductPastry", "pastry_type = ?", item.PastryTypeID).Find(&basket).Error; err != nil {
+			log.Println(err, "err")
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message":    "Route GET:/getAllCategories not found",
+				"error":      "Record not found",
+				"statusCode": 404,
+			})
+			return
+		}
+
+	}
+
 	basket.Item = items
 	log.Println(basket)
 	c.JSON(http.StatusOK, gin.H{
