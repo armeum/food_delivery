@@ -61,7 +61,10 @@ func AddItem(c *gin.Context) {
 
 	basket.TotalPrice = 0
 
-	for _, item := range input.Items {
+	fmt.Println(basket.TotalPrice, "total_price")
+
+	for i, item := range input.Items {
+
 		var product models.Product
 		var productSizePrices models.ProductPrice
 		var productPastryPrice models.ProductPastryType
@@ -72,7 +75,9 @@ func AddItem(c *gin.Context) {
 			})
 			return
 		}
+
 		if item.SizeTypeID != 0 && item.PastryTypeID != 0 {
+
 			if err := db.Where("product_id = ? and id=? ", product.ID, item.SizeTypeID).Find(&productSizePrices).Error; err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{
 					"err": err.Error(),
@@ -89,23 +94,18 @@ func AddItem(c *gin.Context) {
 				return
 			}
 
-			if err := db.Where("id = ?", basket.ID).Preload("Item.Product.Prices", "size_type = ?", item.SizeTypeID).Preload("Item.Product.Prices.ProductPastry", "pastry_type = ?", item.PastryTypeID).Find(&basket).Error; err != nil {
-				log.Println(err, "err")
-				c.JSON(http.StatusBadRequest, gin.H{
-					"message":    "Route GET:/getAllCategories not found",
-					"error":      "Record not found",
-					"statusCode": 404,
-				})
-
-				return
-			}
 			basket.TotalPrice += productPastryPrice.Price * item.Quantity
-			fmt.Println(basket.TotalPrice, "total_price!")
+
 		} else {
-		basket.TotalPrice += product.Price * item.Quantity
-		fmt.Println(basket.TotalPrice, "total_price")
-}
+
+			basket.TotalPrice += product.Price * item.Quantity
+
+		}
+
+		fmt.Println("item", i+1, item.Quantity, product.Price)
+
 	}
+	fmt.Println(basket.TotalPrice, "total_price!")
 
 	basket.Item = makeBasketItems(input.Items)
 	db.Where("basket_id = ?", basket.ID).Delete(&models.BasketItem{})
