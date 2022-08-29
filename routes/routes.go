@@ -79,6 +79,7 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.POST("/basket", basket.SaleBasket)
 	r.POST("/addItem", basket.AddItem)
 	r.DELETE("/basket", basket.DeleteBasket)
+	r.POST("/deleteItem", basket.DeleteItem)
 	
 
 	//////////users routes///////////

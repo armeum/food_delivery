@@ -49,13 +49,12 @@ func SaleBasket(c *gin.Context) {
 		return
 	}
 
-
 	basket.Status = config.BasketSoldStatus
 	db.Save(&basket)
 
 	newBasket := models.Basket{UserID: pkg.GetUserID(c), TotalPrice: 0}
 	db.Create(&newBasket)
 	c.JSON(http.StatusOK, gin.H{
-		"message": "crуated",
+		"message": "created",
 	})
 }

@@ -1,11 +1,12 @@
 package controllers
 
 import (
-	"fmt"
+	"food_delivery/models"
 	"food_delivery/tokens"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 )
 
 type LoginBody struct {
@@ -13,31 +14,59 @@ type LoginBody struct {
 	Password string `json:"password"`
 }
 
-func AdminAuth() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		AdminToken := c.Request.Header.Get("Authorization")
-		if AdminToken == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"message":    "Unauthorized",
-				"error":      "No authorization header provided",
-				"statusCode": http.StatusUnauthorized,
+func AdminLogin(c *gin.Context) {
+
+	var input LoginBody
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid input",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	var admin models.User
+	db := c.MustGet("db").(*gorm.DB)
+
+	if err := db.Where("name = ?", input.Name).Find(&admin).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message":    "Record not found",
+			"error":      err.Error(),
+			"statusCode": 400,
+		})
+		return
+	}
+	var err error
+
+	if admin.Password == input.Password {
+		signedToken, _, err := tokens.TokenGenerator(int(admin.ID), admin.FirstName)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message":    "Route Post:/auth/verify not found",
+				"error":      err.Error(),
+				"statusCode": 404,
 			})
-			c.Abort()
 			return
+		} else if admin.Password != input.Password {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message":    "something went wrong",
+				"error":      err.Error(),
+				"statusCode": 400,
+			})
 		}
 
-		claims, err := tokens.ValidateToken(AdminToken)
-		if err != "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"message": err})
-			c.Abort()
-			return
-		}
-
-		fmt.Printf("%+v\n", claims)
-
-		c.Set("first_name", claims.FirstName)
-		c.Set("phone_number", claims.PhoneNumber)
-		c.Set("id", claims.ID)
-		c.Next()
+		c.JSON(http.StatusOK, gin.H{
+			"message":    "success",
+			"token":      signedToken,
+			"statusCode": 200,
+		})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message":    "invalid input",
+			"error":      err.Error(),
+			"statusCode": 400,
+		})
 	}
 }

@@ -81,6 +81,8 @@ func GetActiveBaskets(c *gin.Context) {
 
 	}
 
+	
+
 	for _, item := range items {
 		fmt.Println(item.SizeTypeID, "size_type_id")
 		if item.SizeTypeID != 0 {
