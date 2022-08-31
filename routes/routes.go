@@ -13,6 +13,7 @@ import (
 	regions "food_delivery/controllers/regions"
 	restaurants "food_delivery/controllers/restaurants"
 	users "food_delivery/controllers/users"
+	favorites "food_delivery/controllers/favorites"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -80,6 +81,10 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.POST("/addItem", basket.AddItem)
 	r.DELETE("/basket", basket.DeleteBasket)
 	r.POST("/deleteItem", basket.DeleteItem)
+
+	/////FAVOURITES routes////////////
+	r.GET("/favourites", favorites.GetFavorites)
+	r.POST("/favourite", favorites.AddFavProd)
 	
 
 	//////////users routes///////////
