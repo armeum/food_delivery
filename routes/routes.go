@@ -14,6 +14,7 @@ import (
 	restaurants "food_delivery/controllers/restaurants"
 	users "food_delivery/controllers/users"
 	favorites "food_delivery/controllers/favorites"
+	orders "food_delivery/controllers/orders"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -77,7 +78,7 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.GET("/baskets", basket.GetBaskets)
 	r.GET("/basket", basket.CheckUserBasket)
 	r.GET("/active_baskets", basket.GetActiveBaskets)
-	r.POST("/basket", basket.SaleBasket)
+	r.GET("/saleBasket", basket.SaleBasket)
 	r.POST("/addItem", basket.AddItem)
 	r.DELETE("/basket", basket.DeleteBasket)
 	r.POST("/deleteItem", basket.DeleteItem)
@@ -85,6 +86,10 @@ func Routes(db *gorm.DB) *gin.Engine {
 	/////FAVOURITES routes////////////
 	r.GET("/favourites", favorites.GetFavorites)
 	r.POST("/favourite", favorites.AddFavProd)
+	// r.POST("/deleteFavourite", favorites.DeleteFavProd)
+
+	//////Orders routes //////////
+	r.GET("/orders", orders.OrdersHistory)
 	
 
 	//////////users routes///////////

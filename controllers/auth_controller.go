@@ -119,4 +119,3 @@ func test(first_name string, phone string, password string) {
 	fmt.Println("response Status:", response.Status)
 	defer response.Body.Close()
 }
-
