@@ -16,7 +16,7 @@ func NewOrders(c *gin.Context) {
 
 	db := c.MustGet("db").(*gorm.DB)
 
-	if err := db.Where("user_id and status", pkg.GetUserID(c), config.BasketSoldStatus).Find(&basket).Error; err != nil {
+	if err := db.Where("user_id = ? and status = ?", pkg.GetUserID(c), config.BasketSoldStatus).Find(&basket).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
 		})
@@ -28,7 +28,7 @@ func NewOrders(c *gin.Context) {
 		order.Status = config.NewOrder
 	}
 
-	if err := db.Where("user_id and status", pkg.GetUserID(c), config.NewOrder).Find(&orders).Error; err != nil {
+	if err := db.Where("user_id = ? and status = ?", pkg.GetUserID(c), config.NewOrder).Find(&orders).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
 		})

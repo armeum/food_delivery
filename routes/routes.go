@@ -90,6 +90,8 @@ func Routes(db *gorm.DB) *gin.Engine {
 
 	//////Orders routes //////////
 	r.GET("/orders", orders.OrdersHistory)
+	r.GET("/new_orders", orders.NewOrders)
+	// r.GET("/canceled_orders", orders.CanceledOrder)
 	
 
 	//////////users routes///////////
