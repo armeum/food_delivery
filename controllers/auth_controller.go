@@ -61,11 +61,8 @@ func Login(c *gin.Context) {
 
 	user.Password = RandomPassword()
 	SmsSender(user.FirstName, user.PhoneNumber, user.Password)
-
 	fmt.Printf("\n%+v\n", user)
-
 	db.Model(&user).Updates(&user)
-
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Created",
 	})

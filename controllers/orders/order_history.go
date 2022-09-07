@@ -16,15 +16,13 @@ func OrdersHistory(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	if err := db.Where("user_id = ? and status = ?", pkg.GetUserID(c), config.BasketSoldStatus).Preload("Item.Product.Prices.ProductPastry").Find(&basket).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			"error":      err.Error(),
 			"statusCode": http.StatusBadRequest,
 		})
 		return
 	}
-
 	fmt.Println(basket)
-
 	c.JSON(http.StatusOK, gin.H{
-		"data": basket, 
+		"data": basket,
 	})
 }
