@@ -10,8 +10,8 @@ import (
 
 type UpdateAdminInput struct {
 	gorm.Model
-	Name        string `json:"first_name"`
-	PhoneNumber string `json:"phone_number"`
+	Name     string `json:"name"`
+	Password string `json:"password"`
 }
 
 func UpdateAdmin(c *gin.Context) {
@@ -39,7 +39,7 @@ func UpdateAdmin(c *gin.Context) {
 
 	var updateInput models.Admin
 	updateInput.Name = input.Name
-	updateInput.PhoneNumber = input.PhoneNumber
+	updateInput.Password = input.Password
 
 	db.Model(&admin).Updates(updateInput)
 	c.JSON(http.StatusOK, gin.H{"data": admin})

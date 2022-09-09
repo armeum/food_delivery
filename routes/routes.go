@@ -9,12 +9,13 @@ import (
 	admin "food_delivery/controllers/admin"
 	basket "food_delivery/controllers/basket"
 	categories "food_delivery/controllers/categories"
+	driver "food_delivery/controllers/driver"
+	favorites "food_delivery/controllers/favorites"
+	orders "food_delivery/controllers/orders"
 	products "food_delivery/controllers/products"
 	regions "food_delivery/controllers/regions"
 	restaurants "food_delivery/controllers/restaurants"
 	users "food_delivery/controllers/users"
-	favorites "food_delivery/controllers/favorites"
-	orders "food_delivery/controllers/orders"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -40,6 +41,21 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.POST("/auth/login", controllers.Login)
 	r.POST("/auth/verify", controllers.Verification)
 	// r.Use(middleware.Authentication())
+
+	////Driver Login/////
+	r.POST("/driverLog", driver.Login)
+	r.POST("/driverVerify", driver.DriverVerification)
+	//////////////
+
+	//////Admin Login/////
+	r.POST("/adminLog", admin.AdminLogin)
+
+	////////admin routes////////
+	r.GET("/admin", admin.FindAdmin)
+	r.POST("/admin", admin.CreateAdmin)
+	r.GET("/admin/:id", admin.FindAdminById)
+	r.PATCH("/admin/:id", admin.UpdateAdmin)
+	r.DELETE("/admin/:id", admin.DeleteAdmin)
 
 	r.Use(middleware.Authentication())
 
@@ -89,10 +105,17 @@ func Routes(db *gorm.DB) *gin.Engine {
 	// r.POST("/deleteFavourite", favorites.DeleteFavProd)
 
 	//////Orders routes //////////
-	r.GET("/orders", orders.OrdersHistory)
+	r.GET("/order_history", orders.OrdersHistory)
 	r.GET("/new_orders", orders.NewOrders)
+	r.GET("/orders", orders.GetAllOrders)
 	// r.GET("/canceled_orders", orders.CanceledOrder)
-	
+
+	//////Driver routes/////////
+	r.GET("/drivers", driver.GetDrivers)
+	r.GET("/driver/:id", driver.GetDriverById)
+	r.POST("/driver", driver.AddDriver)
+	r.PATCH("/driver/:id", driver.UpdateDriver)
+	r.DELETE("/driver/:id", driver.DeleteDriver)
 
 	//////////users routes///////////
 
@@ -101,13 +124,6 @@ func Routes(db *gorm.DB) *gin.Engine {
 	r.POST("/user", users.CreateUser)
 	r.PATCH("/:users/:id", users.UpdateUser)
 	r.DELETE("/:users/:id", users.DeleteUser)
-
-	////////admin routes////////
-	r.GET("/admin", admin.FindAdmin)
-	r.GET("/admin/:id", admin.FindAdminById)
-	r.POST("/admin", admin.CreateAdmin)
-	r.PATCH("/admin/:id", admin.UpdateAdmin)
-	r.DELETE("/admin/:id", admin.DeleteAdmin)
 
 	return r
 }

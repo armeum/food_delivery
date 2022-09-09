@@ -10,8 +10,8 @@ import (
 
 type CreateAdminInput struct {
 	gorm.Model
-	Name        string `json:"first_name"`
-	PhoneNumber string `json:"phone_number"`
+	Name     string `json:"name"`
+	Password string `json:"password"`
 }
 
 func CreateAdmin(c *gin.Context) {
@@ -28,7 +28,7 @@ func CreateAdmin(c *gin.Context) {
 	}
 
 	//Create admin
-	admin := models.Admin{Name: input.Name, PhoneNumber: input.PhoneNumber}
+	admin := models.Admin{Name: input.Name, Password: input.Password}
 
 	db := c.MustGet("db").(*gorm.DB)
 	db.Create(&admin)

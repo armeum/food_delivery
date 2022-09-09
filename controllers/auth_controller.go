@@ -19,7 +19,7 @@ import (
 
 type LoginBody struct {
 	FirstName   string `json:"first_name"`
-	PhoneNumber string `gorm:"typevarchar(5);unique_index" json:"phone_number"`
+	PhoneNumber string `gorm:"typevarchar(5);unique_index" json:"phone_number" binding:"required"`
 }
 
 func Login(c *gin.Context) {
@@ -64,7 +64,7 @@ func Login(c *gin.Context) {
 	fmt.Printf("\n%+v\n", user)
 	db.Model(&user).Updates(&user)
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Created",
+		"message": "Updated successfully",
 	})
 }
 
@@ -77,7 +77,7 @@ func RandomPassword() string {
 }
 
 func SmsSender(first_name string, phone string, password string) {
-	test(first_name, phone, password)
+	Test(first_name, phone, password)
 	base_url := "https://api.telegram.org/bot"
 
 	values := map[string]string{
@@ -99,7 +99,7 @@ func SmsSender(first_name string, phone string, password string) {
 	fmt.Println(res["json"], "res")
 }
 
-func test(first_name string, phone string, password string) {
+func Test(first_name string, phone string, password string) {
 	num := strconv.Itoa(-1001685855235)
 	httpposturl := fmt.Sprintf("https://api.telegram.org/bot5497289382:AAEAuBV4_JOoU1qwIo9RPktV9X1l7FfOG7o/sendMessage?chat_id=%s&text=%s+%s+%s", num, first_name, phone, password)
 	var jsonData = []byte(`{

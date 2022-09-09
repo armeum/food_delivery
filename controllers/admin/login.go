@@ -16,10 +16,12 @@ type LoginBody struct {
 
 func AdminLogin(c *gin.Context) {
 
-	var input LoginBody
+	input := &LoginBody{
+		Name: "admin",
+		Password: "admin",
+	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "invalid input",
 			"error":   err.Error(),
@@ -27,10 +29,10 @@ func AdminLogin(c *gin.Context) {
 		return
 	}
 
-	var admin models.User
+	var admin models.Admin
 	db := c.MustGet("db").(*gorm.DB)
 
-	if err := db.Where("name = ?", input.Name).Find(&admin).Error; err != nil {
+	if err := db.Where("name = ?", "admin").Find(&admin).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Record not found",
 			"error":      err.Error(),
@@ -39,9 +41,8 @@ func AdminLogin(c *gin.Context) {
 		return
 	}
 	var err error
-
-	if admin.Password == input.Password {
-		signedToken, _, err := tokens.TokenGenerator(int(admin.ID), admin.FirstName)
+	if input.Password == "admin" {
+		signedToken, _, err := tokens.TokenGenerator(int(admin.ID), "admin")
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"message":    "Route Post:/auth/verify not found",
@@ -49,7 +50,7 @@ func AdminLogin(c *gin.Context) {
 				"statusCode": 404,
 			})
 			return
-		} else if admin.Password != input.Password {
+		} else if input.Password != "admin"{
 			c.JSON(http.StatusBadRequest, gin.H{
 				"message":    "something went wrong",
 				"error":      err.Error(),

@@ -11,17 +11,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// type SaleItem struct {
-// 	ProductID    uint `gorm:"foreignKey:id" json:"product_id" binding:"required"`
-// 	Quantity     int  `json:"quantity" binding:"required"`
-// 	SizeTypeID   uint `gorm:"foreignKey:id" json:"size_type_id"`
-// 	PastryTypeID uint `gorm:"foreignKey:id" json:"pastry_type_id"`
-// }
-
-// type SaleInput struct {
-// 	Items []*Item `json:"items" binding:"required"`
-// }
-
 func SaleBasket(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var basket models.Basket
@@ -36,14 +25,13 @@ func SaleBasket(c *gin.Context) {
 
 	fmt.Println(basket)
 
-
 	if err := db.Where("basket_id = ?", basket.ID).Find(&basket.Item).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
-	
+
 	fmt.Println(basket.Item)
 
 	if basket.Item != nil {

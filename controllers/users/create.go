@@ -11,16 +11,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type OrderItem struct {
-	ID        uint `json:"id"`
-	ProductID uint `json:"product_id"`
-	Quantity  uint `json:"quantity"`
-}
-
-type AddItem struct {
-	Items []*OrderItem `json:"items"`
-}
-
 type CreateUserInput struct {
 	gorm.Model
 	FirstName   string    `json:"first_name" binding:"required"`

@@ -1,9 +1,9 @@
 package controllers
 
 import (
+	"fmt"
 	"food_delivery/config"
 	"food_delivery/models"
-	"food_delivery/pkg"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,31 +11,30 @@ import (
 )
 
 func NewOrders(c *gin.Context) {
-	var orders []*models.Order
 	var basket models.Basket
+	var order models.Order
 
 	db := c.MustGet("db").(*gorm.DB)
 
-	if err := db.Where("user_id = ? and status = ?", pkg.GetUserID(c), config.BasketSoldStatus).Find(&basket).Error; err != nil {
+	if err := db.Where("status = ?", config.BasketSoldStatus).Find(&basket).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
+			"status":  http.StatusBadRequest,
 		})
 		return
 	}
-	
+
+	fmt.Println(basket)
+
 	if basket.Status == config.BasketSoldStatus {
-		var order *models.Order
 		order.Status = config.NewOrder
+		db.Where("status = ?", config.NewOrder).Find(&order)
 	}
 
-	if err := db.Where("user_id = ? and status = ?", pkg.GetUserID(c), config.NewOrder).Find(&orders).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err.Error(),
-		})
-		return
-	}
-
+	fmt.Println(&order.Status)
 	c.JSON(http.StatusOK, gin.H{
 		"message": "the order has been added successfully",
+		"data":    order,
+		"basket":  basket,
 	})
 }

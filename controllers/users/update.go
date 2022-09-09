@@ -14,7 +14,6 @@ import (
 type UpdateUserInput struct {
 	gorm.Model
 	FirstName   string            `json:"first_name"`
-	LastName    string            `json:"last_name"`
 	PhoneNumber string            `json:"phone_number"`
 	Gender      models.GenderType `json:"gender"`
 	Email       string            `json:"email"`
@@ -51,7 +50,7 @@ func UpdateUser(c *gin.Context) {
 
 	id_uint, err := strconv.ParseUint(c.Param("id"), 10, 64)
 
-	if user.ID != uint(id_uint) {
+	if user.ID != uint(id_uint) {	
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Rout Patch:/users/:id not found",
 			"error":      err.Error(),
