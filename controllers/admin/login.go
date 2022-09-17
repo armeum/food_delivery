@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"food_delivery/models"
 	"food_delivery/tokens"
 	"net/http"
@@ -17,7 +18,7 @@ type LoginBody struct {
 func AdminLogin(c *gin.Context) {
 
 	input := &LoginBody{
-		Name: "admin",
+		Name:     "admin",
 		Password: "admin",
 	}
 
@@ -50,18 +51,17 @@ func AdminLogin(c *gin.Context) {
 				"statusCode": 404,
 			})
 			return
-		} else if input.Password != "admin"{
-			c.JSON(http.StatusBadRequest, gin.H{
-				"message":    "something went wrong",
-				"error":      err.Error(),
-				"statusCode": 400,
-			})
 		}
-
 		c.JSON(http.StatusOK, gin.H{
 			"message":    "success",
 			"token":      signedToken,
 			"statusCode": 200,
+		})
+	} else if input.Password != admin.Password{
+		fmt.Println(input.Password)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "login or password is incorrect",
+			"statusCode": 400,
 		})
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{

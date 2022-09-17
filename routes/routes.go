@@ -16,6 +16,7 @@ import (
 	regions "food_delivery/controllers/regions"
 	restaurants "food_delivery/controllers/restaurants"
 	users "food_delivery/controllers/users"
+	websocket "food_delivery/websocket"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -36,6 +37,9 @@ func Routes(db *gorm.DB) *gin.Engine {
 		fmt.Println("Starting")
 		ctx.Set("db", db)
 	})
+
+	//////Websocket/////
+	r.GET("/ws", websocket.Websocket)
 
 	/////auth routes/////////
 	r.POST("/auth/login", controllers.Login)
