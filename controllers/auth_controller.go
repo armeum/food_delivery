@@ -39,14 +39,12 @@ func Login(c *gin.Context) {
 	if user.PhoneNumber == "" {
 		fmt.Printf("\n%+v\n", user)
 		user := models.User{
+			
 			PhoneNumber: input.PhoneNumber,
 		}
 		db := c.MustGet("db").(*gorm.DB)
 		user.Password = RandomPassword()
 		db.Create(&user)
-		// newBasket := models.Basket{UserID: pkg.GetUserID(c), Status: config.BasketActiveStatus}
-		// // db.Create(&user)
-		// db.Create(&newBasket)
 		SmsSender(user.FirstName, user.PhoneNumber, user.Password)
 		c.JSON(http.StatusOK, gin.H{
 			"Password successfully sent to the phone number": user.PhoneNumber,

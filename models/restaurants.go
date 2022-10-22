@@ -13,3 +13,4 @@ type Restaurants struct {
 func (restaurants *Restaurants) TableName() string {
 	return "restaurants"
 }
+

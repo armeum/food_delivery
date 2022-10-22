@@ -35,11 +35,9 @@ func AddItem(c *gin.Context) {
 		return
 	}
 
-	log.Println(input, "input")
 	db := c.MustGet("db").(*gorm.DB)
 	basket, err := userBasket(pkg.GetUserID(c), db)
 	if err != nil && err != gorm.ErrRecordNotFound {
-		log.Println(err, "err")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "Route GET:/getAllCategories not found",
 			"error":      "Record not found",
@@ -47,8 +45,6 @@ func AddItem(c *gin.Context) {
 		})
 		return
 	}
-	log.Println(basket, "basket")
-	log.Println(pkg.GetUserID(c), "id")
 
 	if basket.ID == 0 {
 		basket.UserID = pkg.GetUserID(c)
@@ -60,8 +56,6 @@ func AddItem(c *gin.Context) {
 	}
 
 	basket.TotalPrice = 0
-
-	fmt.Println(basket.TotalPrice, "total_price")
 
 	for i, item := range input.Items {
 
@@ -99,13 +93,10 @@ func AddItem(c *gin.Context) {
 		} else {
 
 			basket.TotalPrice += product.Price * item.Quantity
-
 		}
 
 		fmt.Println("item", i+1, item.Quantity, product.Price)
-
 	}
-	fmt.Println(basket.TotalPrice, "total_price!")
 
 	basket.Item = makeBasketItems(input.Items)
 	db.Where("basket_id = ?", basket.ID).Delete(&models.BasketItem{})
@@ -123,6 +114,7 @@ func userBasket(userId uint, db *gorm.DB) (*models.Basket, error) {
 }
 
 func makeBasketItems(items []*Item) []*models.BasketItem {
+
 	var basketItems []*models.BasketItem = make([]*models.BasketItem, 0)
 
 	for _, item := range items {
@@ -139,5 +131,4 @@ func makeBasketItems(items []*Item) []*models.BasketItem {
 	}
 
 	return basketItems
-
 }
